@@ -1,7 +1,7 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI
 from pydantic import BaseModel , Field 
-from typing import Optional
+from typing import Optional,List
 from datetime import datetime
 app = FastAPI()
 
@@ -17,13 +17,13 @@ class Fee(BaseModel):
     remaining: int
     fine: int
     date: Optional[datetime] = Field(default=datetime.utcnow())
-    Studentid: str # description: Union[str, None] = None #Optional thing can be declared by none
+    Studentid: List=[] # description: Union[str, None] = None #Optional thing can be declared by none
     class Config:
         schema_extra = {
             "example": {
                             "admission": 1,
                             "monthly_fee": 1,
-                            "schola0  rship": 1,
+                            "scholarship": 1,
                             "discount": 1,
                             "status": 0,
                             "total_fee": 1,
@@ -31,7 +31,7 @@ class Fee(BaseModel):
                             "remaining": 1,
                             "fine": 3,
                             "date" : "2023-02-07T06:16:54.763Z",
-                            "Studentid" : " 2"
+                            "Studentid" : [" 2"]
             }
         }
         orm_mode = True
@@ -53,6 +53,7 @@ class Fee_modify(BaseModel):
     remaining:Optional[int]
     fine:Optional[int]
     date:Optional[int]
+    Studentid: List=[] 
     class Config:
         schema_extra = {
             "example": {
@@ -66,6 +67,7 @@ class Fee_modify(BaseModel):
                             "remaining": 1,
                             "fine": 1,
                             "date" : "2023-02-07T06:16:54.763Z",
+                            "Studentid" : [" 2"]
             }
         }
         orm_mode = True

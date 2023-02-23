@@ -22,7 +22,7 @@ class Employee2(BaseModel):
     qualification: str
     salary : int
     bank_name : str
-    account_name : int 
+    account_number : int 
     title: str
     branch_code: str
     blood_group : str
@@ -49,7 +49,7 @@ class Employee2(BaseModel):
                                 "qualification": "str",
                                 "salary" : 24,
                                 "bank_name" : "str",
-                                "account_name" : 24 ,
+                                "account_number" : 24 ,
                                 "title": "str",
                                 "branch_code": "str",
                                 "blood_group" : "str",
@@ -71,7 +71,7 @@ class Employee2_modify(BaseModel):
     qualification: Optional[str]
     salary : Optional[int]
     bank_name : Optional[str]
-    account_name : Optional[int] 
+    account_number : Optional[int] 
     title: Optional[str]
     branch_code: Optional[str]
     blood_group : Optional[str]
@@ -95,7 +95,7 @@ class Employee2_modify(BaseModel):
                                 "phone": 23,
                                 "qualification": "str",
                                 "salary" : 23,
-                                "bank_name" : "str",
+                                "bank_number" : "str",
                                 "account_name" : 23 ,
                                 "title": "str",
                                 "branch_code": "str",

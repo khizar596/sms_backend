@@ -1,6 +1,6 @@
 from pydantic import BaseModel , EmailStr ,Field
 from typing import Optional, Union, List
-from datetime import datetime
+from datetime import date
 from bson import ObjectId
 class Student(BaseModel):
     
@@ -11,7 +11,7 @@ class Student(BaseModel):
     cnic: str
     address: str
     gender: str
-    dob: Union[str,datetime] = datetime.now()
+    dob: Union[str,date] = date.today()
     email: EmailStr
     image: str
     phone: int
@@ -38,7 +38,7 @@ class Student(BaseModel):
                             "cnic": "str",
                             "address": "str",
                             "gender": "str",
-                            "dob": 12,
+                            "dob": date.today(),
                             "email": "str",
                             "image": "str",
                             "phone": 12,
@@ -46,8 +46,8 @@ class Student(BaseModel):
                             "religion": "str",
                             "previous_school": "str",
                             "session": "str",
-                            "class_subjectid" : 12,
-                            "parentid": [12]
+                            "class_id" : ["12"],
+                            "parentid": ["12"]
             }
         }
 
@@ -60,7 +60,7 @@ class Student_modify(BaseModel):
     cnic: Optional[str]
     address: Optional[str]
     gender: Optional[str]
-    dob: Optional[datetime]   #  "dob": "2023-02-07T06:16:54.763Z"
+    dob: Optional[date]   #  "dob": "2023-02-07T06:16:54.763Z"
     email: Optional[EmailStr]
     image: Optional[str]
     phone: Optional[int]
@@ -68,8 +68,8 @@ class Student_modify(BaseModel):
     religion: Optional[str]
     previous_school: Optional[str]
     session: Optional[str]
-    class_subjectid : Optional[int]
-    parentid: Optional[str]
+    class_id : Optional[List ] = [ ]
+    parentid:Optional[List ] = [ ]
     blocked: Optional[bool]  = Field(default=False)
 
     # description: Union[str, None] = None #Optional thing can be declared by none

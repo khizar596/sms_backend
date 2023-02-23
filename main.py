@@ -44,7 +44,7 @@ app.include_router(student_route.router)
 
 # #PARENT
 # app.include_router(Parent_route.router)
-# app.include_router(Fee_route.router)
+app.include_router(Fee_route.router)
 # app.include_router(Question_route.router)
 
 

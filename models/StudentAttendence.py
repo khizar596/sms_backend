@@ -1,19 +1,19 @@
 # from typing import Any, List, Union
 from pydantic import BaseModel
-from typing import Optional , Union
+from typing import Optional , Union, List
 from datetime import date 
 
 
 class StudentAttendence(BaseModel):
     date: Union[str,date]
     type : str
-    Studentid: str
+    Studentid: List=[]
     class Config:
         schema_extra = {
             "example": {
                                 "date" : date.today(),
                                 "type" : "str",
-                                "Studentid" : 2,
+                                "Studentid" : ["2"],
                                 
                                                             
                 }}
@@ -25,13 +25,13 @@ class StudentAttendence(BaseModel):
 class StudentAttendence_modify(BaseModel):
     date: Union[str,date]
     type : Optional[str]
-    Studentid: Optional[str]
+    Studentid: Optional[List]=[]
     class Config:
         schema_extra = {
             "example": {
                                 "date" : date.today(),
                                 "type" : "D",
-                                "Studentid" : 2,
+                                "Studentid" : ["2"],
                                 
                                                             
                 }}
