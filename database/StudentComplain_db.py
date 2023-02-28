@@ -1,6 +1,10 @@
 from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
+from database.Admin_db import col_Admin
+from database.Student_db import col_student
+# from database.StudentAdmin import col_student_admin
+# is k andr studnet admin ko complete kr k  dalna ha 
 col_Std_comp = sms_db.Std_complain
 from models.StudentComplain import StudentComplain
 

@@ -1,6 +1,6 @@
 from pydantic import BaseModel , EmailStr ,Field
-from typing import Optional
-from datetime import datetime
+from typing import Optional,Union
+from datetime import date
 
 
 class Parent(BaseModel):
@@ -9,7 +9,7 @@ class Parent(BaseModel):
     cnic: str
     address: str
     gender: str
-    dob: Optional[datetime] = datetime.now() #  "dob": "2023-02-07T06:16:54.763Z"
+    dob: Optional[Union[str,date]] = date.today() #  "dob": "2023-02-07T06:16:54.763Z"
     email: EmailStr
     image: str
     phone: int
@@ -24,7 +24,7 @@ class Parent(BaseModel):
                             "cnic": "str",
                             "address": "str",
                             "gender": "str",
-                            "dob": "int",
+                            "dob": date.today(),
                             "email": "str",
                             "image": "str",
                             "phone": "int",
@@ -43,7 +43,7 @@ class Parent_modify(BaseModel):
     cnic: Optional[str]
     address: Optional[str]
     gender: Optional[str]
-    dob: Optional[datetime] = datetime.now() #  "dob": "2023-02-07T06:16:54.763Z"
+    dob: Optional[Union[str,date]] = date.today() #  "dob": "2023-02-07T06:16:54.763Z"
     email: Optional[str]
     image: Optional[str]
     phone: Optional[int]
@@ -56,7 +56,7 @@ class Parent_modify(BaseModel):
                             "cnic": "Optional[str]",
                             "address": "Optional[str]",
                             "gender": "Optional[str]",
-                            "dob": "int",
+                            "dob": date.today(),
                             "email": "Optional[str]",
                             "image": "Optional[str]",
                             "phone": "int",

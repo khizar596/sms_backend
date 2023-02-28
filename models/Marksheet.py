@@ -1,7 +1,7 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 
@@ -11,8 +11,8 @@ class Marksheet(BaseModel):
     grade : str
     comment : str 
     percentage: int
-    Examid : int
-    Student: int
+    Examid : List=[]
+    Studentid: List= []
     class Config:
         schema_extra ={
             "example": {
@@ -21,8 +21,8 @@ class Marksheet(BaseModel):
                             "grade" : "A",
                             "comment" : "Good" ,
                             "percentage": 23,
-                            "Examid" : 23,
-                            "Student": 23,
+                            "Examid" : ["23"],
+                            "Studentid": ["23"],
      }
         }
         orm_mode = True
@@ -38,8 +38,9 @@ class Marksheet_modify(BaseModel):
     grade : Optional[str]
     comment : Optional[str] 
     percentage: Optional[int]
-    Examid : Optional[int]
-    Student: Optional[int]
+    Examid : Optional[List]=[]
+    Studentid: Optional[List]=[]
+
     class Config:
         schema_extra ={
             "example": {
@@ -48,8 +49,8 @@ class Marksheet_modify(BaseModel):
                             "grade" : "A",
                             "comment" : "Good" ,
                             "percentage": 23,
-                            "Examid" : 23,
-                            "Student": 23,
+                            "Examid" : ["23"],
+                            "Studentid": ["23"],
      }
         }
         orm_mode = True

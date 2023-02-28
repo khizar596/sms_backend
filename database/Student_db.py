@@ -62,7 +62,10 @@ async def enrollstudent(details):
         studentdetails['class_id'] = class_relation
         col_student.insert_one(studentdetails) # Changing ki hab 
         return True
+    return False
 
+
+    
 async def modifystudent(student_id:str , details):
     studentdetails=details
     try:

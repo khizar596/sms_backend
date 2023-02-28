@@ -2,8 +2,12 @@ from models.Marksheet import Marksheet
 from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
+from database.Exam_db import col_Exam
+from database.Student_db import col_student
 col_marksheet = sms_db.Marksheets
+from database.auth import AuthHandler
 
+auth_handler=AuthHandler()
 
 
 async def viewmarksheet():
@@ -27,22 +31,48 @@ async def searchmarksheet(marksheet_id : str)->dict:
     return document
 
 
-async def addmarksheet(details):
-    marksheetdetails= details
-    # feedetails= details
-    # Student_id_check = feedetails['Studentid']
-    # document=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})    
-    # if document:
-    #     col_fee.insert_one(feedetails) # Changing ki hab 
-    #     return True
-    # return {"Id error":"Id of student doesn't exist"}
 
-    col_marksheet.insert_one(marksheetdetails) # Changing ki hab 
-    return True
+
+
+async def addmarksheet(details):
+
+    marksheetdetails= details
+    
+    exam_relation=  [col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'][0])},{'_id': 0})]
+    student_relation=  [col_student.find_one({"_id": ObjectId( marksheetdetails['Studentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
+    
+    if exam_relation!=None and student_relation !=None :
+        marksheetdetails['Examid'] = exam_relation
+        marksheetdetails['Studentid'] = student_relation
+    
+        col_marksheet.insert_one(marksheetdetails) # Changing ki hab 
+    
+        return True
+    return False
 
 async def modifymarksheet(marksheet_id:str , details):
-    col_marksheet.update_one({"_id": ObjectId(marksheet_id)}, {"$set": details})
+    marksheetdetails=details
+    try:
+        if marksheetdetails['password']!=None:
+            hashed = auth_handler.get_password_hash(details['password'])
+            marksheetdetails['password']=hashed
+        else:
+            pass
+
+        #### MODIFY Relations 
+        exam_relation= [col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'][0])},{'_id': 0})]
+        student_relation=  [col_student.find_one({"_id": ObjectId( marksheetdetails['studentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
+        if exam_relation!=None: 
+            marksheetdetails['Examid'] = exam_relation
+        if student_relation !=None :
+            marksheetdetails['Studentid'] = student_relation
+    except:
+        pass
+    col_marksheet.update_one({"_id": ObjectId(marksheet_id)}, {"$set": marksheetdetails})
     return {"Succesfully updated the record"}
+
+
+
 
 async def deletemarksheetid(marksheet_id:str):
     col_marksheet.delete_one({'_id': ObjectId(marksheet_id)})

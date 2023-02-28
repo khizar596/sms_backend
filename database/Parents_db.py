@@ -34,15 +34,15 @@ async def addparent(details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
-    # cursor = col_parent.find({})
+    cursor = col_parent.find({})
 
-    # for document in cursor:
-    #     if document['cnic']==parentdetails['cnic']:
-    #         response= {"CNIC " : "already exist "}
-    #         return response
-    #     elif document['email']==parentdetails['email']:
-    #         response={"Email " : "already exist "}    
-    #         return response
+    for document in cursor:
+        if document['cnic']==parentdetails['cnic']:
+            response= {"CNIC " : "already exist "}
+            return response
+        elif document['email']==parentdetails['email']:
+            response={"Email " : "already exist "}    
+            return response
     col_parent.insert_one(parentdetails) # Changing ki hab 
     return True
 

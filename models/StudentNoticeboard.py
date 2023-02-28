@@ -1,22 +1,23 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional,Union
+from typing import Optional,Union,List
+
 from datetime import date 
 
 
 class StudentNoticeboard(BaseModel):
    date : Union[str,date]
    description : str 
-   Admin2id : str 
-   StudentAdminid : str
+   Admin2id : List = [] 
+   StudentAdminid : List = []
    class Config:
         schema_extra = {
             "example": {
                             "date":date.today(),
                             "description":"description",
-                            "Admin2id":"Admin2id",
-                            "StudentAdminid":"StudentAdminid",
+                            "Admin2id":["Admin2id"],
+                            "StudentAdminid":["StudentAdminid"],
 
             }
         }
@@ -27,15 +28,15 @@ class StudentNoticeboard(BaseModel):
 class StudentNoticeboard_modify(BaseModel):
    date : Optional[Union[str,date]]
    description : Optional[str] 
-   Admin2id : Optional[str] 
-   StudentAdminid : Optional[str]
+   Admin2id : Optional[List] 
+   StudentAdminid : Optional[List]
    class Config:
         schema_extra = {
             "example": {
                             "date":date.today(),
                             "description":"description",
-                            "Admin2id":"Admin2id",
-                            "StudentAdminid":"StudentAdminid",
+                            "Admin2id":["Admin2id"],
+                            "StudentAdminid":["StudentAdminid"],
 
             }
         }

@@ -1,25 +1,27 @@
-from models.Employee2 import Employee2
 from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
+from models.Staff2 import Staff2, Staff2_modify
+col_Staff2 = sms_db.Staff2
+from database.Employee_db import col_employee
+
 from database.auth import AuthHandler
+
 auth_handler=AuthHandler()
-col_employee = sms_db.Employees
 
 
 
-
-async def viewemployee():
+async def viewStaff2():
     employees=[]
-    cursor = col_employee.find({})
+    cursor = col_Staff2.find({})
 
     for document in cursor:
-        employees.append((Employee2(**document)))
+        employees.append((Staff2(**document)))
     return employees
 
-async def searchemployee(employee_id : str)->dict:
+async def searchStaff2(employee_id : str)->dict:
 
-    document=  col_employee.find_one({"_id": ObjectId(employee_id)},{'_id': 0}) #ROLA WALA JAGA    
+    document=  col_Staff2.find_one({"_id": ObjectId(employee_id)},{'_id': 0}) #ROLA WALA JAGA    
     # document=  col_employee.find_one({"_id": ObjectId(employee_id)}) #ROLA WALA JAGA
     
     if not document:
@@ -29,7 +31,7 @@ async def searchemployee(employee_id : str)->dict:
     return document
 
 
-async def enrollemployee(details):
+async def addStaff2(details):
     employeedetails= details
     cursor = col_employee.find({})
 
@@ -42,19 +44,18 @@ async def enrollemployee(details):
             return response
     hashed = auth_handler.get_password_hash(employeedetails['password'])
     employeedetails['password']=hashed
-    col_employee.insert_one(employeedetails) # Changing ki hab 
+    col_Staff2.insert_one(employeedetails) # Changing ki hab 
     return True
 
-async def modifyemployee(employee_id:str , details):
+async def modifyStaff2(employee_id:str , details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
     else : 
         return{"Please enter"}
-    col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
+    col_Staff2.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
-async def deletebyid(employee_id:str):
-    print( "2363654347345734576347",employee_id)
-    col_employee.delete_one({'_id': ObjectId(employee_id)})
+async def deleteStaff2id(employee_id:str):
+    col_Staff2.delete_one({'_id': ObjectId(employee_id)})
     return True

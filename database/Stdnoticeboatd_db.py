@@ -2,7 +2,8 @@ from settings import sms_db
 from bson import ObjectId
 from models.StudentNoticeboard import StudentNoticeboard   
 col_stdnotice = sms_db.Student_Noticeboard
-
+from database.Admin_db import col_Admin
+from database.StudentAdmin_db import col_StudentAdmin
 
 
 async def viewstdnotice():
@@ -26,9 +27,13 @@ async def viewstdnotice():
 
 async def addstdnotice(details):
     stdnoticedetails= details
-    
-    col_stdnotice.insert_one(stdnoticedetails) 
-    return True
+    Admin_relation=  [col_Admin.find_one({"_id": ObjectId( stdnoticedetails['Admin2id'][0])},{'_id': 0})]
+    StdAdmin_relation=  [col_StudentAdmin.find_one({"_id": ObjectId( stdnoticedetails['StudentAdminid'][0])},{'_id': 0})]
+    if Admin_relation and StdAdmin_relation:
+        # stdnoticedetails['Admin2id'] = Admin_relation
+        # stdnoticedetails['StudentAdminid'] = StdAdmin_relation
+        col_stdnotice.insert_one(stdnoticedetails) 
+        return True
 
 async def modifystdnotice(stdnotice_id:str , details):
     col_stdnotice.update_one({"_id": ObjectId(stdnotice_id)}, {"$set": details})
