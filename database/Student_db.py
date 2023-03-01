@@ -68,7 +68,7 @@ async def enrollstudent(details):
     
 async def modifystudent(student_id:str , details):
     studentdetails=details
-    try:
+    try:  
         if studentdetails['password']!=None:
             hashed = auth_handler.get_password_hash(details['password'])
             studentdetails['password']=hashed

@@ -1,21 +1,21 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 app = FastAPI()
 
 
 class Class_subject(BaseModel):
-    Classid: str
-    Courseid : str
-    Teacherid: str
+    Classid: List
+    Courseid : List
+    Teacherid: List
     class Config:
         schema_extra = {
             "example": {
-                            "Classid" : "Classid",
-                            "Courseid" : "Courseid",
-                            "Teacherid" : "Teacherid",
+                            "Classid" : ["Classid"],
+                            "Courseid" : ["Courseid"],
+                            "Teacherid" : ["Teacherid"],
             }
         }
         orm_mode = True
@@ -23,15 +23,15 @@ class Class_subject(BaseModel):
         arbitrary_types_allowed = True
 
 class Class_subject_modify(BaseModel):
-    Classid: Optional[str]
-    Courseid : Optional[str]
-    Teacherid: Optional[str]
+    Classid: Optional[List]
+    Courseid : Optional[List]
+    Teacherid: Optional[List]
     class Config:
         schema_extra = {
             "example": {
-                            "Classid" : "Classid",
-                            "Courseid" : "Courseid",
-                            "Teacherid" : "Teacherid",
+                            "Classid" : ["Classid"],
+                            "Courseid" : ["Courseid"],
+                            "Teacherid" : ["Teacherid"],
             }
         }
         orm_mode = True

@@ -1,25 +1,28 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import Optional, Union
+from pydantic import BaseModel, Field
+from typing import Optional, Union, List
 from datetime import datetime, time
 
 
 class Timetable(BaseModel):
-    day  : str
+    day  : int=Field (..., ge=1, le=31)
     start_time  : Union[str,datetime]
-    end_time :  int
-    Sectionid: str
-    Class_subjectid: str
-    
+    end_time :   Union[str,datetime]
+    Sectionid: List
+    Class_subjectid: List
+    Teacherid: List
+
     class Config:
         schema_extra ={
             "example": {
-                            "day":"Sunday",
-                            "start_time":datetime.now(),
-                            "end_time":23,
-                            "Sectionid":"sectionid",
-                            "Class_subjectid": "class subject id "
+                            "day":3,
+                            "start_time":datetime.now().time(),
+                            "end_time":datetime.now().time(),
+                            "Teacherid":["teacherid"],
+
+                            "Sectionid":["sectionid"],
+                            "Class_subjectid": ["classsubjectid"]
                             }
         }
         orm_mode = True
@@ -27,20 +30,23 @@ class Timetable(BaseModel):
         arbitrary_types_allowed = True
 
 class Timetable_modify(BaseModel):
-    day  : Optional[str]
+    day  : Optional[int]
     start_time  : Optional[Union[str,datetime]]
-    end_time :  Optional[int]
-    Sectionid: Optional[str]
-    Class_subjectid: Optional[str]
+    end_time :  Optional[Union[str,datetime]]
+    Teacherid:  List
+
+    Sectionid: Optional[List]
+    Class_subjectid: Optional[List]
     
     class Config:
         schema_extra ={
             "example": {
-                            "day":"Monday",
-                            "start_time":datetime.now(),
-                            "end_time":34,
-                            "Sectionid":"sectionid",
-                            "Class_subjectid": "class subject id "
+                            "day":4,
+                            "start_time":datetime.now().time(),
+                            "end_time":datetime.now().time(),
+                            "Teacherid":["teacherid"],
+                            "Sectionid":["sectionid"],
+                            "Class_subjectid": ["classsubjectid"]
                             }
         }
         orm_mode = True

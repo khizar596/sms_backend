@@ -1,11 +1,14 @@
-from fastapi import APIRouter, HTTPException , status
+from fastapi import APIRouter, HTTPException , status, WebSocket
 from models.chatbox import Chatbox , Chatbox_modify
+from fastapi.responses import JSONResponse
+
 from database.Chatbox_db import (
     viewchatbox,
     addchatbox,
     deletechatboxid,
-    modifychatbox,
-    searchchatbox
+    modifychatbox
+
+    # searchchatbox
 )
 
 router = APIRouter(
@@ -26,11 +29,11 @@ async def view_chatbox():
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-@router.get("/{chatbox_id}")
-async def search_chatbox(chatbox_id:str):
-    # print(chatbox_id)
-    response = await searchchatbox(chatbox_id)
-    return response
+# @router.get("/{chatbox_id}")
+# async def search_chatbox(chatbox_id:str):
+#     # print(chatbox_id)
+#     response = await searchchatbox(chatbox_id)
+#     return response
 
 
 
@@ -58,4 +61,8 @@ async def delete_id(id: str):
                             detail=f'No record with id: {id} found')
     return { "Status":"Succesfully deleted ",
         "status_code " : status.HTTP_200_OK}
+
+
+
+# $$$$ WEBSOCKET  CHATTING LOGIC
 
