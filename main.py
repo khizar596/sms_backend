@@ -32,12 +32,12 @@ app.include_router(Userlogin_route.router)
 #ADMIN
 app.include_router(Admin_route.router)
 # #Employee
-# app.include_router(Employee_route.router)
-# app.include_router(Empnoticeboard_route.router)
-# app.include_router(EmpComplain_route.router)
-# app.include_router(EmpAttendence_route.router)
-# app.include_router(Staff2_route.router)
-# app.include_router(StudentAdmin_route.router)
+app.include_router(Employee_route.router)
+app.include_router(Empnoticeboard_route.router)
+app.include_router(EmpComplain_route.router)
+app.include_router(EmpAttendence_route.router)
+app.include_router(Staff2_route.router)
+app.include_router(StudentAdmin_route.router)
 
 # app.include_router(HR2_route.router)
 # app.include_router(Accountant2_route.router)
