@@ -18,7 +18,7 @@ from routes import (   Examinationadmin_route,Accountant2_route,HR2_route,Studen
 #                     Marksheet,Questions,Quiz,Salary2,Section,Staff2)
 #App Creations
 app=FastAPI()
-origins = [ 'https://ilh5jagznl.execute-api.us-east-2.amazonaws.com/']
+origins = [ 'https://ilh5jagznl.execute-api.us-east-2.amazonaws.com:8000/']
 
 app.add_middleware(
     CORSMiddleware,
