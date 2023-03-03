@@ -1,7 +1,6 @@
 import pymongo
 
 
-config = dotenv_values(".env") 
 
 password= "khizar0405"
 Username= "SMKhizar"
