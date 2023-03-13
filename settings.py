@@ -1,14 +1,12 @@
-from dotenv import dotenv_values
 import pymongo
 
 
-config = dotenv_values(".env") 
 
-password= config['PASSWORD_DB']
-Username= config['USER_NAME_DB']
-secret_key=config['SECRET_KEY']
-algorithm = config["ALGORITHM"]
-expiry_time=config['ACCESS_TOKEN_EXPIRE_MINUTES']
+password= "khizar0405"
+Username= "SMKhizar"
+secret_key="gcfvxEbmtYf4IvtjDDV7YuWQXcE"
+algorithm = "HS256"
+
 
 
 SMS=pymongo.MongoClient(f"mongodb+srv://{Username}:{password}@cluster0.v438msx.mongodb.net/?retryWrites=true&w=majority")
