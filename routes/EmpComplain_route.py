@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException  , status
+from fastapi import APIRouter, HTTPException  , status,Depends
 from database.employeecomplain_db import ( 
     viewEmp_comp,
     addEmp_comp,
@@ -6,16 +6,20 @@ from database.employeecomplain_db import (
     deletebyid
 )
 from models.EmployeeComplain import EmployeeComplain,EmployeeComplain_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/empcomplain",
     tags=["Employee Complain"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 
 @router.get("/" )
-async def view_Emp_comp():
+async def view_Emp_comp(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewEmp_comp()
     if response: 
         return {

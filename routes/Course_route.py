@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException , status
+from fastapi import APIRouter, HTTPException , status,Depends
 from models.Courses import Courses_modify, Courses
 from database.Courses_db import ( 
      viewCourse, 
@@ -7,17 +7,21 @@ from database.Courses_db import (
       searchCourse,
       deleteCourseid
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/course",
     tags=["Courses"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}})
 
 
 @router.get("/" )
-async def view_Course():
+async def view_Course(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewCourse()
     if response: 
         return {

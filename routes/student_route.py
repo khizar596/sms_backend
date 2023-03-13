@@ -14,11 +14,13 @@ from database.Student_db import (
 router = APIRouter(
     prefix="/student",
     tags=["Student"],
-    # dependencies=[Depends(auth_handler.auth_wrapper)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}})
 
 @router.get("/")
-async def view_student():
+async def view_student(user = Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_student')
+
     response = await viewStudent()
     if response: 
         return {
@@ -28,7 +30,9 @@ async def view_student():
 
 
 @router.get("/{student_id}")
-async def search_student(student_id:str):
+async def search_student(student_id:str,user = Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'search_student')
+
     # print(student_id)
     response = await searchStudent(student_id)
     return response
@@ -36,8 +40,9 @@ async def search_student(student_id:str):
 
 
 @router.post("/")
-async def enroll_student(student : Student):
-    
+async def enroll_student(student : Student,user = Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'add_student')
+
     response = await enrollstudent(student.dict())
     if response==True:
         return {"response ": "Successfully created . . .",
@@ -46,14 +51,16 @@ async def enroll_student(student : Student):
 
 
 @router.put("/modify/{student_id}")
-async def modify_student(student_id: str , data :Student_modify ):
+async def modify_student(student_id: str , data :Student_modify,user = Depends(auth_handler.auth_wrapper) ):
+    auth_handler.has_permission(user, 'modify_student')
 
     response = await modifystudent(student_id, data.dict(exclude_none=True))
     return response
 
 
 @router.delete('/{id}')
-async def delete_id(id: str):
+async def delete_id(id: str,user = Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'delete_student')
 
     response = await deletebyid(id)
     if not response:

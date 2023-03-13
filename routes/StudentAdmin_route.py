@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from models.StudentAdmin import StudentAdmin , StudentAdmin_modify
 from database.StudentAdmin_db import ( 
     viewStudentAdmin,
@@ -8,24 +8,21 @@ from database.StudentAdmin_db import (
     addStudentAdmin
 
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/StudentAdmin",
     tags=["StudentAdmin"],
-    # dependencies=[Depends(get_token_header)],
-    responses={404: {"description": "Not found"}},)
-
-
-router = APIRouter(
-    prefix="/StudentAdmin",
-    tags=["StudentAdmin"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 
 @router.get("/")
-async def view_StudentAdmin():
+async def view_StudentAdmin(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewStudentAdmin()
     print(response)
     if response: 

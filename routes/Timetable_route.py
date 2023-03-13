@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from database.Timetable_db import ( 
      addtimetable,
      viewtimetable,
@@ -7,6 +7,8 @@ from database.Timetable_db import (
      searchtimetable
 )
 from models.Timetable import Timetable,Timetable_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/timetable",
@@ -15,7 +17,9 @@ router = APIRouter(
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_timetable():
+async def view_timetable(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewtimetable()
     if response: 
         return {

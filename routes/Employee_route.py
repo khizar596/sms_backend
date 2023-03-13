@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException,status
+from fastapi import APIRouter, HTTPException,status,Depends
 from fastapi import UploadFile
 from models.Employee2 import Employee2, Employee2_modify
 from database.Employee_db import (
@@ -10,16 +10,20 @@ from database.Employee_db import (
 )
 
 
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/employee",
     tags=["Employee"],
-    # dependencies=[Depends(get_token_header)],
-    responses={404: {"description": "Not found"}},)
+    dependencies=[Depends(auth_handler.auth_wrapper)],
+    responses={404: {"description": "Not found"}})
 
 
 @router.get("/")
-async def view_employee():
+async def view_employee(user = Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+    
     response = await viewemployee()
     print(response)
     if response: 
@@ -30,15 +34,17 @@ async def view_employee():
 
 
 @router.get("/{employee_id}")
-async def search_employee(employee_id:str):
+async def search_employee(employee_id:str,user = Depends(auth_handler.auth_wrapper)):
     # print(employee_id)
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await searchemployee(employee_id)
     return response
 
 
 
 @router.post("/")
-async def enroll_employee(employee : Employee2):
+async def enroll_employee(employee : Employee2,user = Depends(auth_handler.auth_wrapper)):
     
     response = await enrollemployee(employee.dict())
     if response==True:

@@ -14,15 +14,15 @@ async def viewClass():
         Classs.append((Class(**document)))
     return Classs
 
-# async def searchClass(Class_id : str)->dict:
+async def searchClass(Class_id : str)->dict:
 
-#     document=  col_Class.find_one({"_id": ObjectId(Class_id)},{'_id': 0}) 
+    document=  col_Class.find_one({"_id": ObjectId(Class_id)},{'_id': 0}) 
     
-#     if not document:
+    if not document:
 
-#         raise HTTPException(status_code=404, detail="document not found")
+        raise HTTPException(status_code=404, detail="document not found")
     
-#     return document
+    return document
 
 
 async def addClass(details):

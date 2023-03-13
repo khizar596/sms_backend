@@ -22,7 +22,7 @@ class Student(BaseModel):
     class_id :  List = [ ]
     parentid: List = [ ]
     blocked: Optional[bool]  = Field(default=False)
-    role : str = Field(default='Student')
+    role : List = []
     # description: Union[str, None] = None #Optional thing can be declared by none
 
     class Config:
@@ -47,7 +47,8 @@ class Student(BaseModel):
                             "previous_school": "str",
                             "session": "str",
                             "class_id" : ["12"],
-                            "parentid": ["12"]
+                            "parentid": ["12"],
+                            "role":["6408253889ef7f7b8105f2d9"]
             }
         }
 
@@ -71,6 +72,7 @@ class Student_modify(BaseModel):
     class_id : Optional[List ] = [ ]
     parentid:Optional[List ] = [ ]
     blocked: Optional[bool]  = Field(default=False)
+    role : Optional[List] = []
 
     # description: Union[str, None] = None #Optional thing can be declared by none
     

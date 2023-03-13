@@ -1,7 +1,7 @@
 # from typing import Any, List, Union
 from fastapi import FastAPI ,UploadFile
 from pydantic import BaseModel , EmailStr, Field
-from typing import Optional , Union
+from typing import Optional , Union , List
 from datetime import date 
 
 app = FastAPI()
@@ -27,7 +27,7 @@ class Employee2(BaseModel):
     branch_code: str
     blood_group : str
     relegion : str
-    role : str = Field(default='Employee')
+    role : List = Field(default='staff')
 
     class Config:
         orm_mode = True
@@ -53,7 +53,8 @@ class Employee2(BaseModel):
                                 "title": "str",
                                 "branch_code": "str",
                                 "blood_group" : "str",
-                                "relegion" : "str"
+                                "relegion" : "str",
+                                "role" : ["Teacher"]
                             }
         }
 class Employee2_modify(BaseModel):
@@ -76,6 +77,8 @@ class Employee2_modify(BaseModel):
     branch_code: Optional[str]
     blood_group : Optional[str]
     relegion : Optional[str]
+    role : Optional[List] = Field(default='staff')
+
     class Config:
         orm_mode = True
         allow_population_by_field_name = True
@@ -100,6 +103,7 @@ class Employee2_modify(BaseModel):
                                 "title": "str",
                                 "branch_code": "str",
                                 "blood_group" : "str",
-                                "relegion" : "str"
+                                "relegion" : "str",
+                                "role" : ["Teacher"]
                             }
         }

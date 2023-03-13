@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException , status
+from fastapi import APIRouter, HTTPException , status,Depends
 from database.Questions_db import (
     viewQuestions_quiz, 
     modifyQuestions_quiz,
@@ -7,16 +7,21 @@ from database.Questions_db import (
     createQuestions_quiz
 )
 from models.Questions import Question, Question_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/question",
     tags=["Question  related  to quizz"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_Questions_quiz():
+async def view_Questions_quiz(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
+    
     response = await viewQuestions_quiz()
     if response: 
         return {

@@ -1,20 +1,24 @@
-from fastapi import APIRouter,status, HTTPException
+from fastapi import APIRouter,status, HTTPException,Depends
 from database.Class_db import (
     addClass,
     viewClass,
-    modifyClass,
+    modifyClass,searchClass,
     deleteclassid
 )
 from models.Class import Class,Class_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/class",
     tags=["Class"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_Class():
+async def view_Class(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_class')
+
     response = await viewClass()
     if response: 
         return {
@@ -23,17 +27,19 @@ async def view_Class():
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{Class_id}")
-# async def search_Class(Class_id:str):
-#     # print(Class_id)
-#     response = await searchClass(Class_id)
-#     return response
+@router.get("/{Class_id}")
+async def search_Class(Class_id:str,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'search_class')
+    response = await searchClass(Class_id)
+    return response
 
 
 
 @router.post("/")
-async def create_Class(Class : Class):
+async def create_Class(Class : Class,user=Depends(auth_handler.auth_wrapper)):
     response = await addClass(Class.dict())
+    auth_handler.has_permission(user, 'add_class')
+
     if response==True:
         return {"response ": "Successfully added . . .",
             "status" : status.HTTP_200_OK}       
@@ -41,14 +47,17 @@ async def create_Class(Class : Class):
 
 
 @router.put("/modify/{Class_id}")
-async def modify_Class(Class_id: str , data :Class_modify ):
+async def modify_Class(Class_id: str , data :Class_modify ,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'modify_class')
+
     response = await modifyClass(Class_id, data.dict(exclude_none=True))
     return response
 
 
 @router.delete('/{id}')
-async def delete_id(id: str):
-    
+async def delete_id(id: str,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'delete_class')
+
     response = await deleteclassid(id)
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

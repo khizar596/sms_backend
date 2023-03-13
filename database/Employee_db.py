@@ -2,7 +2,7 @@ from models.Employee2 import Employee2
 from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
-from database.auth import AuthHandler
+from database.auth import AuthHandler, colr
 auth_handler=AuthHandler()
 col_employee = sms_db.Employees
 
@@ -32,6 +32,8 @@ async def searchemployee(employee_id : str)->dict:
 async def enrollemployee(details):
     employeedetails= details
     cursor = col_employee.find({})
+    roles_relation=employeedetails['role']
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
 
     for document in cursor:
         if document['cnic']==employeedetails['cnic']:
@@ -42,19 +44,25 @@ async def enrollemployee(details):
             return response
     hashed = auth_handler.get_password_hash(employeedetails['password'])
     employeedetails['password']=hashed
+    employeedetails['role']=role_relation
     col_employee.insert_one(employeedetails) # Changing ki hab 
     return True
 
 async def modifyemployee(employee_id:str , details):
+    roles_relation=details['role']
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})] 
+    
+    if role_relation!=None:
+        details['role']=role_relation
+    
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
     else : 
-        return{"Please enter"}
+        pass
     col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 async def deletebyid(employee_id:str):
-    print( "2363654347345734576347",employee_id)
     col_employee.delete_one({'_id': ObjectId(employee_id)})
     return True

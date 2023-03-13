@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException , status, WebSocket
+from fastapi import APIRouter, HTTPException , status, WebSocket,Depends
 from models.chatbox import Chatbox , Chatbox_modify
 from fastapi.responses import JSONResponse
 
@@ -10,17 +10,22 @@ from database.Chatbox_db import (
 
     # searchchatbox
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/chatbox",
     tags=["Chatbox"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}})
 
 
 
+
 @router.get("/" )
-async def view_chatbox():
+async def view_chatbox(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewchatbox()
     if response: 
         return {

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from database.Salary_db import ( 
     addSalary,
     viewSalary,
@@ -6,15 +6,22 @@ from database.Salary_db import (
     deleteSalaryid
 )
 from models.Salary2 import Salary2, Salary2_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/salary",
     tags=["Salary"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
+
+
 @router.get("/" )
-async def view_Salarys_quiz():
+
+async def view_Salarys_quiz(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewSalary()
     if response: 
         return {

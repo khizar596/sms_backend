@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from database.StudentAttendence_db import ( 
      addSTD_attendence,
      viewSTD_attendence,
@@ -6,39 +6,20 @@ from database.StudentAttendence_db import (
      deleteSTD_attendenceid
 )
 from models.StudentAttendence import StudentAttendence,StudentAttendence_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/stdattendence",
     tags=["Student_attendence"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
-# @router.get("/")
-# async def view_Stdattendence():
-#     pass
-#     return 
-# @router.get("/{Stdattendence_id}")
-# async def search_Stdattendence():
-#     pass
-#     return 
 
-# @router.post("/markattendance/{Stdattendenced_id}")
-# async def mark_Stdattendence(Stdattendence_id : str):
-#     pass
-#     return 
-
-
-# @router.get("/viewreport/{empattendenced_id}")
-# async def view_empattendence_report(empattendence_id : str):
-#     pass
-#     return 
-
-
-# @router.put("/modify/{empattendence_id}")
-# async def modify_empattendence(empattendence_id: str):
-#     pass
 
 @router.get("/" )
-async def view_STD_attendence():
+async def view_STD_attendence(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewSTD_attendence()
     if response: 
         return {

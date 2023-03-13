@@ -1,4 +1,4 @@
-from fastapi import APIRouter,status, HTTPException
+from fastapi import APIRouter,status, HTTPException,Depends
 from models.Fee import Fee ,Fee_modify
 from database.Fee_db import (
     addfee,
@@ -7,17 +7,21 @@ from database.Fee_db import (
     searchfee,
     deletebyid
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 
 router = APIRouter(
     prefix="/fee",
     tags=["Fee Contains Student id also "],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_fee():
+async def view_fee(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewfee()
     print(response)
     if response: 

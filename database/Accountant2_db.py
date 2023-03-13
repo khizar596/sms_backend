@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from bson import ObjectId
 from models.Accountant2 import Accountant2, Accountant2_modify
 col_Accountant2 = sms_db.Accountant2
-from database.Employee_db import col_employee
+from database.Employee_db import col_employee, colr
 
 from database.auth import AuthHandler
 
@@ -13,7 +13,7 @@ auth_handler=AuthHandler()
 
 async def viewAccountant2():
     employees=[]
-    cursor = col_Accountant2.find({})
+    cursor = col_Accountant2.find({'role.0.name':'Accountant'})
 
     for document in cursor:
         employees.append((Accountant2(**document)))
@@ -21,19 +21,18 @@ async def viewAccountant2():
 
 async def searchAccountant2(employee_id : str)->dict:
 
-    document=  col_Accountant2.find_one({"_id": ObjectId(employee_id)},{'_id': 0}) #ROLA WALA JAGA    
-    # document=  col_employee.find_one({"_id": ObjectId(employee_id)}) #ROLA WALA JAGA
-    
+    document=  col_employee.find_one({"_id": ObjectId(employee_id),'role.0.name':'Accountant'},{'_id':0})
     if not document:
 
         raise HTTPException(status_code=404, detail="Item not found")
-    
     return document
 
 
 async def addAccountant2(details):
     employeedetails= details
     cursor = col_employee.find({})
+    employe_role=employeedetails['role']
+    role_relation= [colr.find_one({"_id": ObjectId(employe_role[0])},{'_id': 0,'name':1})]
 
     for document in cursor:
         if document['cnic']==employeedetails['cnic']:
@@ -42,15 +41,27 @@ async def addAccountant2(details):
         elif document['email']==employeedetails['email']:
             response={"Email " : "already exist "}    
             return response
-    hashed = auth_handler.get_password_hash(employeedetails['password'])
-    employeedetails['password']=hashed
-    col_Accountant2.insert_one(employeedetails) # Changing ki hab 
-    return True
+        elif not role_relation:
+            raise HTTPException(status_code=404,detail="Please specify role")
+    if role_relation=="Accountant":
+        employeedetails['role']=role_relation
+
+        hashed = auth_handler.get_password_hash(employeedetails['password'])
+        employeedetails['password']=hashed
+        col_employee.insert_one(employeedetails) # Changing ki hab 
+        return True
+    else:
+        return "Change your role kindly"
 
 async def modifyAccountant2(employee_id:str , details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
+    if details['role']:
+        employe_role=details['role']
+        role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+
+        details['role']=role_relation
     else : 
         return{"Please enter"}
     col_Accountant2.update_one({"_id": ObjectId(employee_id)}, {"$set": details})

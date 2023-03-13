@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from models.employeeattendance2 import employeeattendance2_modify,employeeattendance2
 from database.EmpAttendence2_db import ( 
     viewEmp_Attendence2,
@@ -7,41 +7,20 @@ from database.EmpAttendence2_db import (
     deleteEmp_Attendence2id,
     modifyEmp_Attendence2
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/empattendence",
     tags=["Employee Attendence"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
-# @router.get("/")
-# async def view_empattendence():
-#     pass
-#     return 
-# @router.get("/{empattendence_id}")
-# async def search_empattendence():
-#     pass
-#     return 
-
-# @router.post("/markattendance/{empattendenced_id}")
-# async def mark_empattendence(empattendence_id : str):
-#     pass
-#     return 
-
-
-# @router.get("/viewreport/{empattendenced_id}")
-# async def view_empattendence_report(empattendence_id : str):
-#     pass
-#     return 
-
-
-# @router.put("/modify/{empattendence_id}")
-# async def modify_empattendence(empattendence_id: str):
-#     pass
-
 @router.get("/" )
-async def view_Emp_Attendence2():
+async def view_Emp_Attendence2(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewEmp_Attendence2()
     if response: 
         return {

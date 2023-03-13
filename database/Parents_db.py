@@ -2,7 +2,7 @@ from models.Parent import Parent , Parent_modify
 from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
-from database.auth import AuthHandler
+from database.auth import AuthHandler,colr
 auth_handler=AuthHandler()
 col_parent = sms_db.parent
 
@@ -11,7 +11,7 @@ col_parent = sms_db.parent
 
 async def viewparent():
     parents=[]
-    cursor = col_parent.find({})
+    cursor = col_parent.find({'role.0.name':'parent'})
 
     for document in cursor:
         parents.append((Parent(**document)))
@@ -31,11 +31,16 @@ async def searchparent(parent_id : str)->dict:
 
 async def addparent(details):
     parentdetails= details
+    
+    roles_relation=parentdetails['role']
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'parent'},{'_id': 0})]
+    
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
     cursor = col_parent.find({})
-
+    if role_relation:
+            parentdetails['role']=role_relation
     for document in cursor:
         if document['cnic']==parentdetails['cnic']:
             response= {"CNIC " : "already exist "}
@@ -50,6 +55,11 @@ async def modifyparent(parent_id:str , details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
+    roles_relation=details['role']
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'parent'},{'_id': 0})]
+
+    if role_relation!=None:
+        details['role']=role_relation
     col_parent.update_one({"_id": ObjectId(parent_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

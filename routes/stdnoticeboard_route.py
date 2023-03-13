@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from database.Stdnoticeboatd_db import( 
     addstdnotice,
     viewstdnotice,
@@ -6,15 +6,19 @@ from database.Stdnoticeboatd_db import(
     deletestdnoticeid
 )
 from models.StudentNoticeboard import StudentNoticeboard, StudentNoticeboard_modify
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/stdnotice",
     tags=["Student Notice Board"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_stdnotice():
+async def view_stdnotice(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewstdnotice()
     if response: 
         return {

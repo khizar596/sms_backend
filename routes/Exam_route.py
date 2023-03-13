@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException  , status
+from fastapi import APIRouter, HTTPException  , status,Depends
 from models.Exam import Exam, Exam_modify
 from database.Exam_db import( 
     viewExam, 
@@ -7,16 +7,20 @@ from database.Exam_db import(
     modifyExam, 
     deleteExamid
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/exam",
     tags=["Exam"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_Exam():
+async def view_Exam(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewExam()
     if response: 
         return {

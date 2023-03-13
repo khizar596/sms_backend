@@ -1,7 +1,6 @@
 from models.Employee2 import Employee2,Employee2_modify
-from pydantic import Field
-
+from typing import List, Optional
 class StudentAdmin(Employee2):
-    role: str = Field(default='StudentAdmin')
+    role: List = []
 class StudentAdmin_modify(Employee2_modify):
-    role: str = Field( default =' StudentAdmin')
+    role: Optional[List] = []

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from models.ExaminationAdmin2 import ExaminationAdmin2 , ExaminationAdmin2_modify
 from database.Examinationadmin_db import ( 
     viewExaminationadmin,
@@ -8,26 +8,22 @@ from database.Examinationadmin_db import (
     addExaminationadmin
 
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 
 router = APIRouter(
     prefix="/Examinationadmin",
     tags=["Examinationadmin"],
-    # dependencies=[Depends(get_token_header)],
-    responses={404: {"description": "Not found"}},)
-
-
-router = APIRouter(
-    prefix="/Examinationadmin",
-    tags=["Examinationadmin"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 
 @router.get("/")
-async def view_Examinationadmin():
+async def view_Examinationadmin(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewExaminationadmin()
-    print(response)
     if response: 
         return {
             "status " : status.HTTP_200_OK, 

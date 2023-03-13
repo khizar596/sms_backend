@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status,Depends
 from models.Marksheet import Marksheet,Marksheet_modify
 from database.Marksheet_db import ( 
      addmarksheet,
@@ -7,15 +7,19 @@ from database.Marksheet_db import (
      deletemarksheetid,
      searchmarksheet
 )
+from database.auth import AuthHandler
+auth_handler=AuthHandler()
 
 router = APIRouter(
     prefix="/marksheet",
     tags=["Marksheet"],
-    # dependencies=[Depends(get_token_header)],
+    dependencies=[Depends(auth_handler.auth_wrapper)],
     responses={404: {"description": "Not found"}},)
 
 @router.get("/" )
-async def view_marksheet():
+async def view_marksheet(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_employee')
+
     response = await viewmarksheet()
     if response: 
         return {

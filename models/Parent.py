@@ -1,5 +1,5 @@
 from pydantic import BaseModel , EmailStr ,Field
-from typing import Optional,Union
+from typing import Optional,Union,List
 from datetime import date
 
 
@@ -14,7 +14,7 @@ class Parent(BaseModel):
     image: str
     phone: int
     profession: str # description: Union[str, None] = None #Optional thing can be declared by none
-    role : str = Field(default='Parent')
+    role : List = []
 
     class Config:
         schema_extra = {
@@ -28,7 +28,8 @@ class Parent(BaseModel):
                             "email": "str",
                             "image": "str",
                             "phone": "int",
-                            "profession" : " str"
+                            "profession" : " str",
+                            "role":["parentroleid"]
             }
         }
         orm_mode = True
@@ -48,6 +49,8 @@ class Parent_modify(BaseModel):
     image: Optional[str]
     phone: Optional[int]
     profession: Optional[str] # description: Union[Optional[str], None] = None #Optional thing can be declared by none
+    role : Optional[List] = []
+
     class Config:
         schema_extra = {
             "example": {
