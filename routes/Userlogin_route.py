@@ -95,7 +95,7 @@ async def login(auth_details : AuthDetails):
         del user['password']
 
         token,details = auth_handler.encode_token(user)
-        return { "token ": token ,
+        return { "token": token ,
                  "details": details
         }
 from database.Employee_role_db import col_employee as cole ,col_Employee_role as colr      

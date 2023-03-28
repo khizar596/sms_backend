@@ -15,10 +15,14 @@ async def viewStudent():
     # ParentDetails = [Parent(**parent) for parent in col_parent.find({})]    
     
     students=[]
-    cursor = col_student.find({'role.0.name':'student'})
+    cursor = col_student.find({})
     for document in cursor:
+        print(document)
         # document['parentid']=list(document['parentid'])
-        students.append((Student(**document)))
+        document['_id']=str(document['_id'])
+        students.append(document)
+
+        # students.append((Student(**document)))
         # print(students)
     return students
 
@@ -58,10 +62,10 @@ async def enrollstudent(details):
     class_relation=  [col_Class.find_one({"_id": ObjectId( studentdetails['class_id'][0])},{'_id': 0})]
     parent_relation=  [col_parent.find_one({"_id": ObjectId( studentdetails['parentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
     roles_relation=studentdetails['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'student'},{'_id': 0})]
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
 
-    if parent_relation!=None and class_relation !=None :
-        studentdetails['parentid'] = (parent_relation)
+    if parent_relation != None and class_relation  != None and role_relation != None:
+        studentdetails['parentid'] = parent_relation
         studentdetails['class_id'] = class_relation
         studentdetails['role']=role_relation
 
@@ -72,29 +76,34 @@ async def enrollstudent(details):
 
     
 async def modifystudent(student_id:str , details):
-    studentdetails=details
-    try:  
-        if studentdetails['password']!=None:
-            hashed = auth_handler.get_password_hash(details['password'])
-            studentdetails['password']=hashed
-        else:
-            pass
+    studentdetails=details  
+    if 'password' in studentdetails and studentdetails['password'] != '':
+        hashed = auth_handler.get_password_hash(details['password'])
+        studentdetails['password']=hashed
+   
 
-        #### MODIFY Relations 
-        class_relation= [col_Class.find_one({"_id": ObjectId( studentdetails['class_id'][0])},{'_id': 0})]
+    #### MODIFY Relations 
+    if 'role' in studentdetails and studentdetails['role'] != '':
+    # if studentdetails['role'] is not None:
+        role_relation = [colr.find_one({"_id": ObjectId(studentdetails['role'][0]), 'name': 'Student'}, {'_id': 0})]
+        if role_relation is not None:
+            studentdetails['role'] = role_relation
+        del studentdetails['role']
+        
+        
+        
+    if 'parentid' in studentdetails and studentdetails['parentid'] != '':
+
+    # if studentdetails['parentid'] != None:    
         parent_relation=  [col_parent.find_one({"_id": ObjectId( studentdetails['parentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
-        roles_relation=studentdetails['role']
-        role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'student'},{'_id': 0})]
-
-        if role_relation!=None:
-            studentdetails['role']=role_relation
-        if parent_relation!=None: 
+        if parent_relation:
             studentdetails['parentid'] = (parent_relation)
-        if class_relation !=None :
+    if 'class_id' in studentdetails and studentdetails['class_id'] != '':
+   
+    # if studentdetails['class_id']  != None :
+        class_relation= [col_Class.find_one({"_id": ObjectId( studentdetails['class_id'][0])},{'_id': 0})]
+        if class_relation:
             studentdetails['class_id'] = class_relation
-    except:
-        pass
-
 
     col_student.update_one({"_id": ObjectId(student_id)}, {"$set": studentdetails})
     return {"Succesfully updated the record"}

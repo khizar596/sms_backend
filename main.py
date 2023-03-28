@@ -1,6 +1,6 @@
 from fastapi import FastAPI , HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-
+from settings import sms_db
 from routes import (   Employee_role_route,Examinationadmin_route,Accountant2_route,HR2_route,StudentAdmin_route,Staff2_route,Teacher_route,Userlogin_route,Admin_route,stdnoticeboard_route,student_route,Salary_route,Section_route,
                         StudentAttendence_route,Studentcomplain_route,Parent_route,
                         Assignment_route,EmpAttendence_route,EmpComplain_route,
@@ -18,8 +18,11 @@ from routes import (   Employee_role_route,Examinationadmin_route,Accountant2_ro
 #                     Marksheet,Questions,Quiz,Salary2,Section,Staff2)
 #App Creations
 app=FastAPI()
-origins = [ 'https://ilh5jagznl.execute-api.us-east-2.amazonaws.com:8000/']
-
+sms_db=sms_db
+origins = [
+    "http://localhost",
+    "http://localhost:8000"
+]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

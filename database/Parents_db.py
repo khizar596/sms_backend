@@ -11,10 +11,15 @@ col_parent = sms_db.parent
 
 async def viewparent():
     parents=[]
-    cursor = col_parent.find({'role.0.name':'parent'})
-
+    cursor = col_parent.find({})
     for document in cursor:
-        parents.append((Parent(**document)))
+        print(document)
+        # document['parentid']=list(document['parentid'])
+        document['_id']=str(document['_id'])
+        parents.append(document)
+
+        # parents.append((Student(**document)))
+        # print(parents)
     return parents
 
 async def searchparent(parent_id : str)->dict:

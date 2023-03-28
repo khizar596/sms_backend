@@ -3,7 +3,7 @@ from typing import Optional, Union, List
 from datetime import date
 from bson import ObjectId
 class Student(BaseModel):
-    
+
     first_name: str
     last_name: str
     parent_name: str
@@ -61,7 +61,7 @@ class Student_modify(BaseModel):
     cnic: Optional[str]
     address: Optional[str]
     gender: Optional[str]
-    dob: Optional[date]   #  "dob": "2023-02-07T06:16:54.763Z"
+    dob: Optional[Union[str,date]]   #  "dob": "2023-02-07T06:16:54.763Z"
     email: Optional[EmailStr]
     image: Optional[str]
     phone: Optional[int]
@@ -69,10 +69,10 @@ class Student_modify(BaseModel):
     religion: Optional[str]
     previous_school: Optional[str]
     session: Optional[str]
-    class_id : Optional[List ] = [ ]
-    parentid:Optional[List ] = [ ]
-    blocked: Optional[bool]  = Field(default=False)
-    role : Optional[List] = []
+    class_id : Optional[List] 
+    parentid:Optional[List] 
+    blocked: Optional[bool]
+    role : Optional[List] 
 
     # description: Union[str, None] = None #Optional thing can be declared by none
     

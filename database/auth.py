@@ -39,7 +39,7 @@ class AuthHandler():
 
     def decode_token(self, token):
         payload = jwt.decode(token, self.secret, algorithms=[self.algorithm])
-        print(payload)
+        # print(payload)
         try:
             
             payload = jwt.decode(token, self.secret, algorithms=[self.algorithm])
