@@ -16,26 +16,21 @@ async def viewEmployee_role():
     cursor = col_Employee_role.find({})
 
     for document in cursor:
-        employees.append((Role(**document)))
+        document['_id']=str(document['_id'])
+
+        employees.append((document))
     return employees
 
 async def searchEmployee_role(employee_id : str)->dict:
 
     document=  col_Employee_role.find_one({"_id": ObjectId(employee_id)},{'_id': 0}) #ROLA WALA JAGA    
-    # document=  col_employee.find_one({"_id": ObjectId(employee_id)}) #ROLA WALA JAGA
-    
     if not document:
-
         raise HTTPException(status_code=404, detail="Item not found")
-    
     return document
 
 
 async def addEmployee_role(details):
     employeedetails= details
-    # cursor = col_employee.find({})
-    # hashed = auth_handler.get_password_hash(employeedetails['password'])
-    # employeedetails['password']=hashed
     col_Employee_role.insert_one(employeedetails) # Changing ki hab 
     return True
 

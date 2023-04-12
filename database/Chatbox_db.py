@@ -4,7 +4,7 @@ from models.chatbox import Chatbox
 from bson import ObjectId
 from database.StudentAdmin_db import col_StudentAdmin
 from database.Admin_db import col_Admin
-from database.Teacher_db import col_Teacher
+from database.Teacher_db import col_employee as cole
 from database.Classsubject_db import col_Classsubject
 from database.Student_db import col_student
 col_chatbox = sms_db.chatbox
@@ -12,35 +12,61 @@ col_chatbox = sms_db.chatbox
 
 
 async def viewchatbox():
-    col_chatboxs=[]
-   
+    col_chatboxs = []
     cursor = col_chatbox.find({})
-   
     for document in cursor:
-        col_chatboxs.append((Chatbox(**document)))
+        
+        Studentid_relation = col_student.find_one({"_id": ObjectId(document['Studentid'])}, {'_id': 0,'first_name':1})
+        Class_subjectid_relation = col_Classsubject.find_one({"_id": ObjectId(document['Class_subjectid'])}, {'_id': 0})
+        Teacherid_relation = cole.find_one({"_id": ObjectId(document['Teacherid']), 'role.0.name': 'Teacher'}, {'_id': 0,'first_name':1})
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        StudentAdminid_relation = cole.find_one({"_id": ObjectId(document['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+
+        if not None and StudentAdminid_relation and Class_subjectid_relation and Admin2id_relation and Studentid_relation and Teacherid_relation:
+            document['_id']=str(document['_id'])
+            document['Studentid'] = Studentid_relation
+            document['Class_subjectid'] = Class_subjectid_relation
+            document['Teacherid'] = Teacherid_relation
+            document['Admin2id'] = Admin2id_relation
+            document['StudentAdminid'] = StudentAdminid_relation
+            col_chatboxs.append(document)
     return col_chatboxs
+
+async def searchchatbox(chatbox_id : str)->dict:
+
+    document=  col_chatbox.find_one({"_id": ObjectId(chatbox_id)},{'_id': 0}) 
     
+    if not document:
 
-# async def searchchatbox(chatbox_id : str)->dict:
-
-#     document=  col_chatbox.find_one({"_id": ObjectId(chatbox_id)},{'_id': 0}) 
-    
-#     if not document:
-
-#         raise HTTPException(status_code=404, detail="document not found")
-    
-#     return document
-
+        raise HTTPException(status_code=404, detail="document not found")
+    Studentid_relation = col_student.find_one({"_id": ObjectId(document['Studentid'])}, {'_id': 0,'first_name':1})
+    Class_subjectid_relation = col_Classsubject.find_one({"_id": ObjectId(document['Class_subjectid'])}, {'_id': 0})
+    Teacherid_relation = cole.find_one({"_id": ObjectId(document['Teacherid']), 'role.0.name': 'Teacher'}, {'_id': 0,'first_name':1})
+    Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+    StudentAdminid_relation = cole.find_one({"_id": ObjectId(document['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+    if not None and StudentAdminid_relation and Class_subjectid_relation and Admin2id_relation and Studentid_relation and Teacherid_relation:
+        document['Studentid']=Studentid_relation
+        document['Class_subjectid']=Class_subjectid_relation
+        document['Teacherid']=Teacherid_relation
+        document['Admin2id']=Admin2id_relation
+        document['StudentAdminid']=StudentAdminid_relation
+        return document
+    else : 
+        raise LookupError
 
 async def addchatbox(details):
     chatboxdetails= details
     
-    Studentid_relation=  [col_student.find_one({"_id": ObjectId( chatboxdetails['Studentid'][0])},{'_id': 0})]
-    Class_subjectid_relation=  [col_Classsubject.find_one({"_id": ObjectId( chatboxdetails['Class_subjectid'][0])},{'_id': 0})]
-    Teacherid_relation=  [col_Teacher.find_one({"_id": ObjectId( chatboxdetails['Teacherid'][0])},{'_id': 0})]
-    Admin2id_relation=  [col_Admin.find_one({"_id": ObjectId( chatboxdetails['Admin2id'][0])},{'_id': 0})]
-    StudentAdminid_relation=  [col_StudentAdmin.find_one({"_id": ObjectId( chatboxdetails['StudentAdminid'][0])},{'_id': 0})]
-    if StudentAdminid_relation and Class_subjectid_relation and Admin2id_relation and Studentid_relation and Teacherid_relation:
+    Studentid_relation = col_student.find_one({"_id": ObjectId(chatboxdetails['Studentid'])}, {'_id': 0,'first_name':1})
+    Class_subjectid_relation = col_Classsubject.find_one({"_id": ObjectId(chatboxdetails['Class_subjectid'])}, {'_id': 0})
+    Teacherid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['Teacherid']), 'role.0.name': 'Teacher'}, {'_id': 0,'first_name':1})
+    Admin2id_relation = col_Admin.find_one({"_id": ObjectId(chatboxdetails['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+    StudentAdminid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+
+
+
+    if not None and StudentAdminid_relation and Class_subjectid_relation and Admin2id_relation and Studentid_relation and Teacherid_relation:
+        
         col_chatbox.insert_one(chatboxdetails) 
         return True
     else: 
@@ -48,6 +74,27 @@ async def addchatbox(details):
     
     
 async def modifychatbox(chatbox_id:str , details):
+    try:
+        chatboxdetails= details
+    
+        Studentid_relation = col_student.find_one({"_id": ObjectId(chatboxdetails['Studentid'])}, {'_id': 0,'first_name':1})
+        Class_subjectid_relation = col_Classsubject.find_one({"_id": ObjectId(chatboxdetails['Class_subjectid'])}, {'_id': 0})
+        Teacherid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['Teacherid']), 'role.0.name': 'Teacher'}, {'_id': 0,'first_name':1})
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(chatboxdetails['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        StudentAdminid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+        
+        if Studentid_relation:
+            pass
+        if Class_subjectid_relation:
+            pass
+        if Teacherid_relation:
+            pass
+        if Admin2id_relation:
+            pass
+        if StudentAdminid_relation:
+            pass
+    except:
+        pass
     col_chatbox.update_one({"_id": ObjectId(chatbox_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

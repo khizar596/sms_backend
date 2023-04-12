@@ -13,7 +13,7 @@ class AuthDetails(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                            "email": "hr3@sms.com",
+                            "email": "admin@gmail.com",
                             "password": "password@123"
 }
         }

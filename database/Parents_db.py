@@ -13,7 +13,6 @@ async def viewparent():
     parents=[]
     cursor = col_parent.find({})
     for document in cursor:
-        print(document)
         # document['parentid']=list(document['parentid'])
         document['_id']=str(document['_id'])
         parents.append(document)
@@ -38,8 +37,8 @@ async def addparent(details):
     parentdetails= details
     
     roles_relation=parentdetails['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'parent'},{'_id': 0})]
-    
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
+    print(role_relation)
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
@@ -53,18 +52,24 @@ async def addparent(details):
         elif document['email']==parentdetails['email']:
             response={"Email " : "already exist "}    
             return response
-    col_parent.insert_one(parentdetails) # Changing ki hab 
-    return True
+    if role_relation[0]['name']=="Parent" and details['password']!=None:
+        col_parent.insert_one(parentdetails) # Changing ki hab 
+        return True
+    return "Fill the form carefully "
 
 async def modifyparent(parent_id:str , details):
-    if details['password']:
-        hashed = auth_handler.get_password_hash(details['password'])
-        details['password']=hashed
-    roles_relation=details['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'parent'},{'_id': 0})]
+    try:
+        if details['password']!=None:
+            hashed = auth_handler.get_password_hash(details['password'])
+            details['password']=hashed
+        
+        roles_relation=details['role']
+        role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
 
-    if role_relation!=None:
-        details['role']=role_relation
+        if role_relation!=None:
+            details['role']=role_relation
+    except:
+        pass
     col_parent.update_one({"_id": ObjectId(parent_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

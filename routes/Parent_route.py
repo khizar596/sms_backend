@@ -23,7 +23,6 @@ async def view_parent(user=Depends(auth_handler.auth_wrapper)):
     auth_handler.has_permission(user, 'view_parent')
 
     response = await viewparent()
-    print(response)
     if response: 
         return {
             "status " : status.HTTP_200_OK, 
@@ -53,7 +52,6 @@ async def add_parent(parent : Parent,user=Depends(auth_handler.auth_wrapper)):
 @router.put("/modify/{parent_id}")
 async def modify_parent(parent_id: str , data :Parent_modify,user=Depends(auth_handler.auth_wrapper) ):
     auth_handler.has_permission(user, 'modify_employee')
-
     response = await modifyparent(parent_id, data.dict(exclude_none=True))
     return response
 

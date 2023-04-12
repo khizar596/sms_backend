@@ -6,9 +6,9 @@ from database.Chatbox_db import (
     viewchatbox,
     addchatbox,
     deletechatboxid,
-    modifychatbox
+    modifychatbox,
 
-    # searchchatbox
+    searchchatbox
 )
 from database.auth import AuthHandler
 auth_handler=AuthHandler()
@@ -29,16 +29,16 @@ async def view_chatbox(user=Depends(auth_handler.auth_wrapper)):
     response = await viewchatbox()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "chatbox list" : response }
+            "status" : status.HTTP_200_OK, 
+            "chatboxs" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{chatbox_id}")
-# async def search_chatbox(chatbox_id:str):
-#     # print(chatbox_id)
-#     response = await searchchatbox(chatbox_id)
-#     return response
+@router.get("/{chatbox_id}")
+async def search_chatbox(chatbox_id:str):
+    # print(chatbox_id)
+    response = await searchchatbox(chatbox_id)
+    return response
 
 
 

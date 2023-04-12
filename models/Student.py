@@ -19,8 +19,8 @@ class Student(BaseModel):
     religion: str
     previous_school: str
     session: str
-    class_id :  List = [ ]
-    parentid: List = [ ]
+    class_id : str #List = [ ]
+    # parentid:str #List = [ ]
     blocked: Optional[bool]  = Field(default=False)
     role : List = []
     # description: Union[str, None] = None #Optional thing can be declared by none
@@ -46,8 +46,8 @@ class Student(BaseModel):
                             "religion": "str",
                             "previous_school": "str",
                             "session": "str",
-                            "class_id" : ["12"],
-                            "parentid": ["12"],
+                            "class_id" : "12",
+                            # "parentid": ["12"],
                             "role":["6408253889ef7f7b8105f2d9"]
             }
         }
@@ -69,8 +69,8 @@ class Student_modify(BaseModel):
     religion: Optional[str]
     previous_school: Optional[str]
     session: Optional[str]
-    class_id : Optional[List] 
-    parentid:Optional[List] 
+    class_id : Optional[str] 
+    # parentid:Optional[str] 
     blocked: Optional[bool]
     role : Optional[List] 
 

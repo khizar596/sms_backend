@@ -17,7 +17,7 @@ class Fee(BaseModel):
     remaining: int
     fine: int
     date: Optional[datetime] = Field(default=datetime.utcnow())
-    Studentid: List=[] # description: Union[str, None] = None #Optional thing can be declared by none
+    Studentid:str # List=[] # description: Union[str, None] = None #Optional thing can be declared by none
     class Config:
         schema_extra = {
             "example": {
@@ -53,7 +53,7 @@ class Fee_modify(BaseModel):
     remaining:Optional[int]
     fine:Optional[int]
     date:Optional[int]
-    Studentid: List=[] 
+    Studentid: Optional[str] 
     class Config:
         schema_extra = {
             "example": {
@@ -67,7 +67,7 @@ class Fee_modify(BaseModel):
                             "remaining": 1,
                             "fine": 1,
                             "date" : "2023-02-07T06:16:54.763Z",
-                            "Studentid" : [" 2"]
+                            "Studentid" : " 2"
             }
         }
         orm_mode = True

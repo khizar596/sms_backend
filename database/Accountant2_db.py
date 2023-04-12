@@ -13,7 +13,7 @@ auth_handler=AuthHandler()
 
 async def viewAccountant2():
     employees=[]
-    cursor = col_Accountant2.find({'role.0.name':'Accountant'})
+    cursor = col_employee.find({'role.0.name':'Accountant'})
 
     for document in cursor:
         employees.append((Accountant2(**document)))
@@ -64,9 +64,9 @@ async def modifyAccountant2(employee_id:str , details):
         details['role']=role_relation
     else : 
         return{"Please enter"}
-    col_Accountant2.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
+    col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 async def deleteAccountant2id(employee_id:str):
-    col_Accountant2.delete_one({'_id': ObjectId(employee_id)})
+    col_employee.delete_one({'_id': ObjectId(employee_id)})
     return True

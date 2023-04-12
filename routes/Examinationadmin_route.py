@@ -26,8 +26,8 @@ async def view_Examinationadmin(user=Depends(auth_handler.auth_wrapper)):
     response = await viewExaminationadmin()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Examinationadmin list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Examinationadmins" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

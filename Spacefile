@@ -1,0 +1,12 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: SMS
+    src: .
+    engine: python3.9
+    primary: true
+    commands:
+      - uvicorn main:app --reload
+    run: ./main
+    include:
+      - main

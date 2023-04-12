@@ -7,7 +7,7 @@ from datetime import date
 class StudentAttendence(BaseModel):
     date: Union[str,date]
     type : str
-    Studentid: List=[]
+    Studentid: str
     class Config:
         schema_extra = {
             "example": {
@@ -25,13 +25,13 @@ class StudentAttendence(BaseModel):
 class StudentAttendence_modify(BaseModel):
     date: Union[str,date]
     type : Optional[str]
-    Studentid: Optional[List]=[]
+    Studentid: Optional[str]
     class Config:
         schema_extra = {
             "example": {
                                 "date" : date.today(),
                                 "type" : "D",
-                                "Studentid" : ["2"],
+                                "Studentid" : "2",
                                 
                                                             
                 }}

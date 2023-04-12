@@ -24,7 +24,6 @@ async def view_Teacher(user=Depends(auth_handler.auth_wrapper)):
     auth_handler.has_permission(user, 'view_employee')
 
     response = await viewTeacher()
-    print(response)
     if response: 
         return {
             "status " : status.HTTP_200_OK, 
