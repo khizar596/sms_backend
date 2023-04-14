@@ -14,7 +14,9 @@ async def viewemployee():
     cursor = col_employee.find({})
 
     for document in cursor:
-        employees.append((Employee2(**document)))
+        document['_id']=str(document['_id'])
+
+        employees.append(document)
     return employees
 
 async def searchemployee(employee_id : str)->dict:

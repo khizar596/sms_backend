@@ -16,7 +16,7 @@ router = APIRouter(
     prefix="/Accountant2",
     tags=["Accountant2"],
     dependencies=[Depends(auth_handler.auth_wrapper)],
-    responses={404: {"description": "Not found"}},)
+    responses={404: {"description": "Not found"}})
 
 
 @router.get("/")

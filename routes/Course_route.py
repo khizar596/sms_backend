@@ -25,8 +25,8 @@ async def view_Course(user=Depends(auth_handler.auth_wrapper)):
     response = await viewCourse()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Course list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Courses" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

@@ -22,8 +22,8 @@ async def view_Class(user=Depends(auth_handler.auth_wrapper)):
     response = await viewClass()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Class list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Classlist" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

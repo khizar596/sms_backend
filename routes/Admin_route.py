@@ -7,7 +7,8 @@ router = APIRouter(
     prefix="/Admin",
     tags=["Admin"],
     dependencies=[Depends(auth_handler.auth_wrapper)],
-    responses={404: {"description": "Not found"}},)
+    responses={404: {"description": "Not found"}}
+    )
 
 
 

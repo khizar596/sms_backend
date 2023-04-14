@@ -16,7 +16,8 @@ async def viewAccountant2():
     cursor = col_employee.find({'role.0.name':'Accountant'})
 
     for document in cursor:
-        employees.append((Accountant2(**document)))
+        document['_id']=str(document['_id'])
+        employees.append(document)
     return employees
 
 async def searchAccountant2(employee_id : str)->dict:
@@ -54,16 +55,22 @@ async def addAccountant2(details):
         return "Change your role kindly"
 
 async def modifyAccountant2(employee_id:str , details):
-    if details['password']:
-        hashed = auth_handler.get_password_hash(details['password'])
-        details['password']=hashed
+    if details['role']==[]:
+        del details['role']
+    try:
+        if details['password']:
+            hashed = auth_handler.get_password_hash(details['password'])
+            details['password']=hashed
+    
+    except:
+        pass
     if details['role']:
-        employe_role=details['role']
-        role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
-
-        details['role']=role_relation
-    else : 
-        return{"Please enter"}
+        try:
+            employe_role=details['role'][0]
+            role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+            details['role']=role_relation
+        except:
+            raise HTTPException(203)
     col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

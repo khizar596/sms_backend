@@ -4,7 +4,7 @@ from bson import ObjectId
 from models.Class_subject import Class_subject
 from database.Class_db import col_Class
 from database.Courses_db import col_Course
-from database.Teacher_db import col_Teacher
+from database.Employee_db import col_employee as cole
 col_Classsubject = sms_db.Classsubject
 
 
@@ -14,7 +14,15 @@ async def viewClasssubject():
     cursor = col_Classsubject.find({})
     
     for document in cursor:
-        Classsubjects.append((Class_subject(**document)))
+        document['_id']=str(document['_id'])
+        class_relation=  col_Class.find_one({"_id": ObjectId( document['Classid'])},{'_id': 0})
+        Teacher_relation=  cole.find_one({"_id": ObjectId( document['Teacherid'])},{'_id': 0,'first_name':1})
+        Course_relation=  col_Course.find_one({"_id": ObjectId( document['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+        if class_relation!=None or Course_relation !=None or Teacher_relation !=None :
+            document['Classid'] = class_relation
+            document['Courseid'] = Course_relation
+            document['Teacherid'] = Teacher_relation            
+            Classsubjects.append(document)
     return Classsubjects
 
 async def searchClasssubject(Classsubject_id : str)->dict:
@@ -24,43 +32,46 @@ async def searchClasssubject(Classsubject_id : str)->dict:
     if not document:
 
         raise HTTPException(status_code=404, detail="document not found")
-    
+    class_relation=  col_Class.find_one({"_id": ObjectId( document['Classid'])},{'_id': 0})
+    Teacher_relation=  cole.find_one({"_id": ObjectId( document['Teacherid'])},{'_id': 0,'first_name':1})
+    Course_relation=  col_Course.find_one({"_id": ObjectId( document['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+    if class_relation!=None or Course_relation !=None or Teacher_relation !=None :
+        document['Classid'] = class_relation
+        document['Courseid'] = Course_relation
+        document['Teacherid'] = Teacher_relation 
     return document
 
 
 async def addClasssubject(details):
     Classsubjectdetails= details
-      
-    class_relation=  [col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'][0])},{'_id': 0})]
-    Teacher_relation=  [col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'][0])},{'_id': 0,'first_name':1})]
-
-    Course_relation=  [col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'][0])},{'_id': 0})] #ROLA WALA JAGA    
-    if class_relation!=None or Course_relation !=None or Teacher_relation !=None :
-        Classsubjectdetails['Classid'] = class_relation
-        Classsubjectdetails['Courseid'] = Course_relation
-        Classsubjectdetails['Teacherid'] = Teacher_relation
+    class_relation=  col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'])},{'_id': 0})
+    Teacher_relation=  cole.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'])},{'_id': 0,'first_name':1})
+    Course_relation=  col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+    if class_relation!=None and Course_relation !=None and Teacher_relation !=None :
         col_Classsubject.insert_one(Classsubjectdetails) # Changing ki hab 
         return True
 
-    col_Classsubject.insert_one(Classsubjectdetails) # Changing ki hab 
-    return True
+    return HTTPException(203)
 
 async def modifyClasssubject(Classsubject_id:str , details):
     Classsubjectdetails= details
+    if  "Classid" in details:
+        class_relation=  col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'])},{'_id': 0})  
 
-    class_relation=  [col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'][0])},{'_id': 0})]
-    Teacher_relation=  [col_Teacher.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'][0])},{'_id': 0,'first_name':1})]
-    Course_relation=  [col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'][0])},{'_id': 0})] #ROLA WALA JAGA    
-    if class_relation!=None:
-        Classsubjectdetails['Classid'] = class_relation
-    if Course_relation !=None:
-        Classsubjectdetails['Courseid'] = Course_relation
-    if Teacher_relation !=None :
-        Classsubjectdetails['Teacherid'] = Teacher_relation
-    
+        if class_relation==None:
+            del details['Classid']
+    if "Teacherid" in details:
+        Teacher_relation=  cole.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'])},{'_id': 0,'first_name':1})
+        if Teacher_relation==None:
+            del details['Classid']
+    if "Courseid" in details:
+        Course_relation=  col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+        
+        if Course_relation==None:
+            del details['Classid']
+        
     col_Classsubject.update_one({"_id": ObjectId(Classsubject_id)}, {"$set": details})
-    return {"Succesfully updated the record"}
-
+    return {"status":200,"Message":"Succesfully updated the record"}
 async def deleteclasssubjectid(Classsubject_id:str):
     col_Classsubject.delete_one({'_id': ObjectId(Classsubject_id)})
     return True

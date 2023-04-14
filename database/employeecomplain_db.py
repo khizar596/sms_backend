@@ -11,7 +11,9 @@ async def viewEmp_comp():
     cursor = col_Emp_comp.find({})
 
     for document in cursor:
-        Emp_comps.append((EmployeeComplain(**document)))
+        document['_id']=str(document['_id'])
+
+        Emp_comps.append(document)
     return Emp_comps
 
 # async def searchEmp_comp(Emp_comp_id : str)->dict:

@@ -13,7 +13,7 @@ router = APIRouter(
     prefix="/empcomplain",
     tags=["Employee Complain"],
     dependencies=[Depends(auth_handler.auth_wrapper)],
-    responses={404: {"description": "Not found"}},)
+    responses={404: {"description": "Not found"}})
 
 
 @router.get("/" )

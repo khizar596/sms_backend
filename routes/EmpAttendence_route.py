@@ -15,7 +15,8 @@ router = APIRouter(
     prefix="/empattendence",
     tags=["Employee Attendence"],
     dependencies=[Depends(auth_handler.auth_wrapper)],
-    responses={404: {"description": "Not found"}},)
+    responses={404: {"description": "Not found"}},
+    )
 
 @router.get("/" )
 async def view_Emp_Attendence2(user=Depends(auth_handler.auth_wrapper)):

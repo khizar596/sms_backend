@@ -16,7 +16,14 @@ async def viewmarksheet():
     cursor = col_marksheet.find({})
    
     for document in cursor:
-        col_marksheets.append((Marksheet(**document)))
+        exam_relation=  col_Exam.find_one({"_id": ObjectId( document['Examid'])},{'_id': 0})
+        student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0})    
+        
+        if exam_relation!=None and student_relation !=None :
+            document['Examid'] = exam_relation
+            document['Studentid'] = student_relation
+            document['_id']=str(document['_id'])
+            col_marksheets.append(document)
     return col_marksheets
     
 
@@ -27,7 +34,13 @@ async def searchmarksheet(marksheet_id : str)->dict:
     if not document:
 
         raise HTTPException(status_code=404, detail="document not found")
+    exam_relation=  col_Exam.find_one({"_id": ObjectId( document['Examid'])},{'_id': 0})
+    student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0})    
     
+    if exam_relation!=None and student_relation !=None :
+        document['Examid'] = exam_relation
+        document['Studentid'] = student_relation
+        document['_id']=str(document['_id'])
     return document
 
 
@@ -38,13 +51,11 @@ async def addmarksheet(details):
 
     marksheetdetails= details
     
-    exam_relation=  [col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'][0])},{'_id': 0})]
-    student_relation=  [col_student.find_one({"_id": ObjectId( marksheetdetails['Studentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
-    
+    exam_relation=  col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'])},{'_id': 0})
+    student_relation=  col_student.find_one({"_id": ObjectId( marksheetdetails['Studentid'])},{'_id': 0})    
+        
     if exam_relation!=None and student_relation !=None :
-        marksheetdetails['Examid'] = exam_relation
-        marksheetdetails['Studentid'] = student_relation
-    
+
         col_marksheet.insert_one(marksheetdetails) # Changing ki hab 
     
         return True

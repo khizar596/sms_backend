@@ -10,7 +10,9 @@ async def viewempnotice():
     cursor = col_empnotice.find({})
 
     for document in cursor:
-        empnotices.append((Emp_noticeboard(**document)))
+        document['_id']=str(document['_id'])
+
+        empnotices.append(document)
     return empnotices
 
 # async def searchempnotice(empnotice_id : str)->dict:

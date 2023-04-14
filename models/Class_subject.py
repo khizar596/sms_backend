@@ -7,15 +7,15 @@ app = FastAPI()
 
 
 class Class_subject(BaseModel):
-    Classid: List
-    Courseid : List
-    Teacherid: List
+    Classid: str
+    Courseid : str
+    Teacherid: str
     class Config:
         schema_extra = {
             "example": {
-                            "Classid" : ["Classid"],
-                            "Courseid" : ["Courseid"],
-                            "Teacherid" : ["Teacherid"],
+                            "Classid" : "Classid",
+                            "Courseid" :"Courseid",
+                            "Teacherid" :"Teacherid",
             }
         }
         orm_mode = True
@@ -23,15 +23,15 @@ class Class_subject(BaseModel):
         arbitrary_types_allowed = True
 
 class Class_subject_modify(BaseModel):
-    Classid: Optional[List]
-    Courseid : Optional[List]
-    Teacherid: Optional[List]
+    Classid: Optional[str]
+    Courseid : Optional[str]
+    Teacherid: Optional[str]
     class Config:
         schema_extra = {
             "example": {
-                            "Classid" : ["Classid"],
-                            "Courseid" : ["Courseid"],
-                            "Teacherid" : ["Teacherid"],
+                            "Classid" : "Classid",
+                            "Courseid" : "Courseid",
+                            "Teacherid" : "Teacherid",
             }
         }
         orm_mode = True

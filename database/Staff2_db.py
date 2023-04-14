@@ -16,7 +16,8 @@ async def viewStaff2():
     cursor = col_Staff2.find({'role.0.name':'staff'})
 
     for document in cursor:
-        employees.append((Staff2(**document)))
+        document['_id']=str(document['_id'])
+        employees.append(document)
     return employees
 
 async def searchStaff2(employee_id : str)->dict:
@@ -57,17 +58,18 @@ async def modifyStaff2(employee_id:str , details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
-    roles_relation=details['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
-
-    if role_relation!=None:
-        details['role']=role_relation
+    if details['role']==[]:
+        del details['role']
     if details['role']:
-        employe_role=details['role']
-        role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
-        details['role']=role_relation
+        try:
+            employe_role=details['role'][0]
+            role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+            details['role']=role_relation
+        except:
+            raise HTTPException(203)
+
     else : 
-        return{"Please enter"}
+        return{"Please enter role"}
     col_Staff2.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

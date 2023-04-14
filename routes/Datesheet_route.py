@@ -26,7 +26,7 @@ async def view_datesheet(user=Depends(auth_handler.auth_wrapper)):
     response = await viewdatesheet()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
+            "status" : status.HTTP_200_OK, 
             "datesheet list" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 

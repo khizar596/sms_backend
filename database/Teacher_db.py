@@ -57,20 +57,26 @@ async def addTeacher(details):
         raise ValueError
 
 async def modifyTeacher(employee_id:str , details):
+    
+    if details['role']==[]:
+        del details['role']
     try:
         if details['password']:
             hashed = auth_handler.get_password_hash(details['password'])
             details['password']=hashed
         if details['role']:
-            employe_role=details['role']
-            role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
-
-            details['role']=role_relation
+            try:
+                employe_role=details['role'][0]
+                role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+                details['role']=role_relation
+            except:
+                raise HTTPException(203)
             
         else : 
-            pass
+            HTTPException(203)
     except:
         pass
+    return details
     col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

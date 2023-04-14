@@ -26,8 +26,8 @@ async def view_Assignment(user=Depends(auth_handler.auth_wrapper)):
     response = await viewAssignment()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Assignment list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Assignments" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

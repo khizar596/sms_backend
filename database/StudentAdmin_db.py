@@ -61,13 +61,15 @@ async def modifyStudentAdmin(employee_id:str , details):
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
+    if details['role']==[]:
+        del details['role']
     if details['role']:
-        employe_role=details['role']
-        role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
-
-        details['role']=role_relation
-    else : 
-        return{"Please enter"}
+        try:
+            employe_role=details['role'][0]
+            role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+            details['role']=role_relation
+        except:
+            raise HTTPException(203)
     col_StudentAdmin.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

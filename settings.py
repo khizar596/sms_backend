@@ -7,8 +7,9 @@ Username= os.getenv('MONGO_DB_USER')
 secret_key=os.getenv('SECRET_KEY')
 algorithm = os.getenv('ALGORITHM')
 SMS_DB = os.getenv('MONGO_DB_DATABASE')
+# SMS=pymongo.MongoClient(f"mongodb+srv://{Username}:{password}@cluster0.v438msx.mongodb.net/?retryWrites=true&w=majority")
+SMS=pymongo.MongoClient(f"mongodb+srv://roboticsworlddb:stemmind@cluster0.e3fby4g.mongodb.net/?retryWrites=true&w=majority")
 
-SMS=pymongo.MongoClient(f"mongodb+srv://{Username}:{password}@cluster0.v438msx.mongodb.net/?retryWrites=true&w=majority")
 # SMS = pymongo.MongoClient(
 #     "mongodb+srv://config['USER_NAME_DB']:config['PASSWORD_DB']@cluster0.v438msx.mongodb.net/?retryWrites=true&w=majority")
 

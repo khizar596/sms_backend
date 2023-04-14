@@ -3,6 +3,7 @@ from database.StudentAttendence_db import (
      addSTD_attendence,
      viewSTD_attendence,
      modifySTD_attendence,
+     searchSTD_attendence,
      deleteSTD_attendenceid
 )
 from models.StudentAttendence import StudentAttendence,StudentAttendence_modify
@@ -23,16 +24,16 @@ async def view_STD_attendence(user=Depends(auth_handler.auth_wrapper)):
     response = await viewSTD_attendence()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "STD_attendence list" : response }
+            "status" : status.HTTP_200_OK, 
+            "STD_attendences" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{STD_attendence_id}")
-# async def search_STD_attendence(STD_attendence_id:str):
-#     # print(STD_attendence_id)
-#     response = await searchSTD_attendence(STD_attendence_id)
-#     return response
+@router.get("/{STD_attendence_id}")
+async def search_STD_attendence(STD_attendence_id:str):
+    # print(STD_attendence_id)
+    response = await searchSTD_attendence(STD_attendence_id)
+    return response
 
 
 
