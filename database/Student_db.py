@@ -17,9 +17,10 @@ async def viewStudent():
     students=[]
     cursor = col_student.find({})
     for document in cursor:    
-        class_relation=  col_Class.find_one({"_id": ObjectId(str( document['class_id']))},{'_id': 0})
+        class_relation=  col_Class.find_one({"_id": ObjectId(str( document['class_id']))})
     
         if class_relation  != None:
+            class_relation['_id']=str(class_relation['_id'])
             document['class_id'] = class_relation
         document['_id']=str(document['_id'])
         students.append(document)

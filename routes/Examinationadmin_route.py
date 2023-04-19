@@ -55,12 +55,12 @@ async def modify_Examinationadmin(Examinationadmin_id: str , data :ExaminationAd
     return response
 
 
-@router.delete('/{id}')
-async def delete_id(id: str):
+@router.delete('/{examadminid}')
+async def delete_id(examadminid: str):
     
-    response = await deleteExaminationadminid(id)
+    response = await deleteExaminationadminid(examadminid)
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No record with id: {id} found')
+                            detail=f'No record with id: {examadminid} found')
     return { "status " : status.HTTP_200_OK}
 

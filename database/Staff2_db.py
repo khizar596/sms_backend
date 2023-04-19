@@ -13,7 +13,7 @@ auth_handler=AuthHandler()
 
 async def viewStaff2():
     employees=[]
-    cursor = col_Staff2.find({'role.0.name':'staff'})
+    cursor = col_employee.find({'role.0.name':'staff'})
 
     for document in cursor:
         document['_id']=str(document['_id'])
@@ -61,6 +61,7 @@ async def modifyStaff2(employee_id:str , details):
     if details['role']==[]:
         del details['role']
     if details['role']:
+        
         try:
             employe_role=details['role'][0]
             role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
@@ -70,9 +71,9 @@ async def modifyStaff2(employee_id:str , details):
 
     else : 
         return{"Please enter role"}
-    col_Staff2.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
+    col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 async def deleteStaff2id(employee_id:str):
-    col_Staff2.delete_one({'_id': ObjectId(employee_id)})
+    col_employee.delete_one({'_id': ObjectId(employee_id)})
     return True

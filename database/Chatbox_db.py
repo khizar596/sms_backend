@@ -74,27 +74,30 @@ async def addchatbox(details):
     
     
 async def modifychatbox(chatbox_id:str , details):
-    try:
-        chatboxdetails= details
-    
+    chatboxdetails= details
+
+    if  "Studentid" in details:
         Studentid_relation = col_student.find_one({"_id": ObjectId(chatboxdetails['Studentid'])}, {'_id': 0,'first_name':1})
+
+        if Studentid_relation==None:
+            del details['Studentid']
+    if "Class_subjectid" in details:
         Class_subjectid_relation = col_Classsubject.find_one({"_id": ObjectId(chatboxdetails['Class_subjectid'])}, {'_id': 0})
-        Teacherid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['Teacherid']), 'role.0.name': 'Teacher'}, {'_id': 0,'first_name':1})
+        if Class_subjectid_relation==None:
+            del details['Class_subjectid']
+    if "Admin2id" in details:
         Admin2id_relation = col_Admin.find_one({"_id": ObjectId(chatboxdetails['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
-        StudentAdminid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
         
-        if Studentid_relation:
-            pass
-        if Class_subjectid_relation:
-            pass
-        if Teacherid_relation:
-            pass
-        if Admin2id_relation:
-            pass
-        if StudentAdminid_relation:
-            pass
-    except:
-        pass
+        if Admin2id_relation==None:
+            del details['Admin2id']
+    if "StudentAdminid" in details:
+        StudentAdminid_relation = cole.find_one({"_id": ObjectId(chatboxdetails['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+    
+        if StudentAdminid_relation==None:
+            del details['StudentAdminid']
+    
+    
+    
     col_chatbox.update_one({"_id": ObjectId(chatbox_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

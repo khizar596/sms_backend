@@ -34,10 +34,13 @@ async def searchmarksheet(marksheet_id : str)->dict:
     if not document:
 
         raise HTTPException(status_code=404, detail="document not found")
-    exam_relation=  col_Exam.find_one({"_id": ObjectId( document['Examid'])},{'_id': 0})
-    student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0})    
-    
+    try:
+        exam_relation=  col_Exam.find_one({"_id": ObjectId( document['Examid'])},{'_id': 0})
+        student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0})    
+    except:
+        raise HTTPException(204, "Id relations not found")
     if exam_relation!=None and student_relation !=None :
+        
         document['Examid'] = exam_relation
         document['Studentid'] = student_relation
         document['_id']=str(document['_id'])
@@ -49,37 +52,35 @@ async def searchmarksheet(marksheet_id : str)->dict:
 
 async def addmarksheet(details):
 
-    marksheetdetails= details
-    
-    exam_relation=  col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'])},{'_id': 0})
-    student_relation=  col_student.find_one({"_id": ObjectId( marksheetdetails['Studentid'])},{'_id': 0})    
-        
-    if exam_relation!=None and student_relation !=None :
+    if 'Examid' in details:
+        try:
+            
+            exam_relation=  col_Exam.find_one({"_id": ObjectId( details['Examid'])},{'_id': 0})
+        except:
+            raise HTTPException(204, "Enter correct Examid")
+    if 'Studentid' in details:
+        try:
+            student_relation=  col_student.find_one({"_id": ObjectId( details['Studentid'])},{'_id': 0})    
+        except:
+            raise HTTPException(204,"Enter correct Student id")
 
-        col_marksheet.insert_one(marksheetdetails) # Changing ki hab 
-    
-        return True
-    return False
+    col_marksheet.insert_one(details) # Changing ki hab 
+    return True
 
 async def modifymarksheet(marksheet_id:str , details):
-    marksheetdetails=details
-    try:
-        if marksheetdetails['password']!=None:
-            hashed = auth_handler.get_password_hash(details['password'])
-            marksheetdetails['password']=hashed
-        else:
-            pass
-
-        #### MODIFY Relations 
-        exam_relation= [col_Exam.find_one({"_id": ObjectId( marksheetdetails['Examid'][0])},{'_id': 0})]
-        student_relation=  [col_student.find_one({"_id": ObjectId( marksheetdetails['studentid'][0])},{'_id': 0})] #ROLA WALA JAGA    
-        if exam_relation!=None: 
-            marksheetdetails['Examid'] = exam_relation
-        if student_relation !=None :
-            marksheetdetails['Studentid'] = student_relation
-    except:
-        pass
-    col_marksheet.update_one({"_id": ObjectId(marksheet_id)}, {"$set": marksheetdetails})
+    if 'Examid' in details:
+        try:
+            exam_relation=  col_Exam.find_one({"_id": ObjectId( details['Examid'])},{'_id': 0})
+        except:
+            del details['Examid']
+            
+    if 'Studentid' in details:
+        try:
+            student_relation=  col_student.find_one({"_id": ObjectId( details['Studentid'])},{'_id': 0})    
+        except:
+            del details['Studentid']
+            
+    col_marksheet.update_one({"_id": ObjectId(marksheet_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 

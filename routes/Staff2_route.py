@@ -21,29 +21,30 @@ router = APIRouter(
 
 
 @router.get("/")
-async def view_Staff2():
-    auth_handler.has_permission(user, 'view_employee')
+async def view_Staff2(user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'view_staff')
 
     response = await viewStaff2()
     print(response)
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Staff2 list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Staffs" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
 @router.get("/{Staff2_id}")
-async def search_Staff2(Staff2_id:str):
-    # print(Staff2_id)
+async def search_Staff2(Staff2_id:str,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'search_staff')
     response = await searchStaff2(Staff2_id)
     return response
 
 
 
 @router.post("/")
-async def enroll_Staff2(Staff2 : Staff2):
-    
+async def enroll_Staff2(Staff2 : Staff2,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'add_staff')
+
     response = await addStaff2(Staff2.dict())
     if response==True:
         return {"response ": "Successfully created . . .",
@@ -52,14 +53,17 @@ async def enroll_Staff2(Staff2 : Staff2):
 
 
 @router.put("/modify/{Staff2_id}")
-async def modify_Staff2(Staff2_id: str , data :Staff2_modify ):
+async def modify_Staff2(Staff2_id: str , data :Staff2_modify ,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'modify_staff')
+
     response = await modifyStaff2(Staff2_id, data.dict(exclude_none=True))
     return response
 
 
 @router.delete('/{id}')
-async def delete_id(id: str):
-    
+async def delete_id(id: str,user=Depends(auth_handler.auth_wrapper)):
+    auth_handler.has_permission(user, 'delete_staff')
+
     response = await deleteStaff2id(id)
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

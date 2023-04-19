@@ -51,17 +51,18 @@ async def enrollemployee(details):
     return True
 
 async def modifyemployee(employee_id:str , details):
-    roles_relation=details['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})] 
     
-    if role_relation!=None:
-        details['role']=role_relation
+    if  "role" in details:
+        roles_relation=details['role']
+        role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})] 
     
-    if details['password']:
+        if role_relation==None:
+            del details['role']
+    
+    if  "password" in details:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed
-    else : 
-        pass
+    
     col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

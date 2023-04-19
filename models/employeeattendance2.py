@@ -8,9 +8,9 @@ from datetime import date
 class employeeattendance2(BaseModel):
     date : Optional[Union[str,date]]
     type: str 
-    Employee2id : int
-    Admin2id : int 
-    Hr2id :int 
+    Employee2id : str
+    Admin2id : str 
+    Hr2id :str 
     class Config:
         schema_extra = {
             "example": {

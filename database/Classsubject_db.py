@@ -63,12 +63,12 @@ async def modifyClasssubject(Classsubject_id:str , details):
     if "Teacherid" in details:
         Teacher_relation=  cole.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'])},{'_id': 0,'first_name':1})
         if Teacher_relation==None:
-            del details['Classid']
+            del details['Teacherid']
     if "Courseid" in details:
         Course_relation=  col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
         
         if Course_relation==None:
-            del details['Classid']
+            del details['Courseid']
         
     col_Classsubject.update_one({"_id": ObjectId(Classsubject_id)}, {"$set": details})
     return {"status":200,"Message":"Succesfully updated the record"}
