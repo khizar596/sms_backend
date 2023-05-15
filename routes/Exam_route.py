@@ -24,8 +24,8 @@ async def view_Exam(user=Depends(auth_handler.auth_wrapper)):
     response = await viewExam()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Exam list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Exams" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

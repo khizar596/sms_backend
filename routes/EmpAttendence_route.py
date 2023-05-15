@@ -25,8 +25,8 @@ async def view_Emp_Attendence2(user=Depends(auth_handler.auth_wrapper)):
     response = await viewEmp_Attendence2()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Emp_Attendence2 list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Emp_Attendences" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

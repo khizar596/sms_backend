@@ -2,7 +2,6 @@ from settings import sms_db
 from fastapi import HTTPException
 from models.chatbox import Chatbox
 from bson import ObjectId
-from database.StudentAdmin_db import col_StudentAdmin
 from database.Admin_db import col_Admin
 from database.Teacher_db import col_employee as cole
 from database.Classsubject_db import col_Classsubject
@@ -107,5 +106,4 @@ async def deletechatboxid(chatbox_id:str):
 
 
 
-# $$$$$$ LOGICAL AREA 
 

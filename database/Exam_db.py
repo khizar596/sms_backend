@@ -11,7 +11,8 @@ async def viewExam():
     cursor = col_Exam.find({})
 
     for document in cursor:
-        Exams.append((Exam(**document)))
+        document['_id']=str(document['_id'])
+        Exams.append(document)
     return Exams
 
 async def searchExam(Exam_id : str)->dict:

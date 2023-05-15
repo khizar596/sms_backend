@@ -26,8 +26,8 @@ async def view_Teacher(user=Depends(auth_handler.auth_wrapper)):
     response = await viewTeacher()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Teacher list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Teachers" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
@@ -62,5 +62,5 @@ async def delete_id(id: str):
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
-    return { "status " : status.HTTP_200_OK}
+    return { "status" : status.HTTP_200_OK}
 

@@ -27,7 +27,7 @@ async def view_Classsubject(user=Depends(auth_handler.auth_wrapper)):
     if response: 
         return {
             "status" : status.HTTP_200_OK, 
-            "Classsubject list" : response }
+            "Classsubjects" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

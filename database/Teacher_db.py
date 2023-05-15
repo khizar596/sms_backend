@@ -34,9 +34,10 @@ async def searchTeacher(employee_id : str)->dict:
 async def addTeacher(details):
     employeedetails= details
     cursor = col_employee.find({})
-    employe_role=employeedetails['role']
-    role_relation= [colr.find_one({"_id": ObjectId(employe_role[0])},{'_id': 0})]
-    
+    roles_relation=employeedetails['role']
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
+    if role_relation==[None]:
+        raise HTTPException(405,"Role is not defined")
     for document in cursor:
         if document['cnic']==employeedetails['cnic']:
             response= {"CNIC " : "already exist "}
@@ -44,39 +45,29 @@ async def addTeacher(details):
         elif document['email']==employeedetails['email']:
             response={"Email " : "already exist "}    
             return response
-        elif not role_relation:
-            raise HTTPException(status_code=404,detail="Please specify role")
-    if role_relation[0]['name']=="Teacher":
-        employeedetails['role']=role_relation
-
-        hashed = auth_handler.get_password_hash(employeedetails['password'])
-        employeedetails['password']=hashed
-        col_employee.insert_one(employeedetails) # Changing ki hab 
-        return True
-    else:
-        raise ValueError
+    hashed = auth_handler.get_password_hash(employeedetails['password'])
+    employeedetails['password']=hashed
+    employeedetails['role']=role_relation
+    col_employee.insert_one(employeedetails) # Changing ki hab 
+    return True
 
 async def modifyTeacher(employee_id:str , details):
-    
-    if details['role']==[]:
-        del details['role']
-    try:
+    if 'password' in details:
         if details['password']:
             hashed = auth_handler.get_password_hash(details['password'])
             details['password']=hashed
-        if details['role']:
+    if 'role' in details:
+        if details['role']==[] :
+            del details['role']
+
+        else:
+
             try:
                 employe_role=details['role'][0]
                 role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
                 details['role']=role_relation
             except:
-                raise HTTPException(203)
-            
-        else : 
-            HTTPException(203)
-    except:
-        pass
-    return details
+                raise HTTPException(203, "define the role")
     col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

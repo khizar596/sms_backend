@@ -41,13 +41,11 @@ async def addAssignment(details):
 
 
 async def modifyAssignment(Assignment_id: str, details: dict):
-    if details.get('Class_subjectid'):
+    if 'Class_subjectid' in details:
         try:
             col_Classsubject.find_one({"_id": ObjectId(details['Class_subjectid'])}, {'_id': 0})
         except:
-            return HTTPException(404)    
-    else:
-        pass
+            return HTTPException(404,"class id not found")    
         
     col_Assignment.update_one({"_id": ObjectId(Assignment_id)}, {"$set": details})
     return {"Success": "Assignment record updated successfully"}

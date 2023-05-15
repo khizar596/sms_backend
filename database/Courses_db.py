@@ -11,7 +11,9 @@ async def viewCourse():
     cursor = col_Course.find({})
 
     for document in cursor:
-        Coursses.append((Courses(**document)))
+        document['_id']= str(document['_id'])
+
+        Coursses.append(document)
     return Coursses
 
 async def searchCourse(Course_id : str)->dict:

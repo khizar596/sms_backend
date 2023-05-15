@@ -25,11 +25,10 @@ async def view_Accountant2(user = Depends(auth_handler.auth_wrapper)):
     # 'search_accountant','add_accountant', 'modify_accountant','view_accountant','delete_accountant',
 
     response = await viewAccountant2()
-    print(response)
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Accountant2 list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Accountants" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
@@ -68,5 +67,5 @@ async def delete_id(id: str,user = Depends(auth_handler.auth_wrapper)):
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
-    return { "status " : status.HTTP_200_OK}
+    return { "status" : status.HTTP_200_OK}
 

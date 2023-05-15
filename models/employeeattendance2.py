@@ -10,7 +10,7 @@ class employeeattendance2(BaseModel):
     type: str 
     Employee2id : str
     Admin2id : str 
-    Hr2id :str 
+    HR2id :str 
     class Config:
         schema_extra = {
             "example": {
@@ -18,7 +18,7 @@ class employeeattendance2(BaseModel):
                                 "type" : "str",
                                 "Employee2id" : 2,
                                 "Admin2id" : 2 ,
-                                "Hr2id" :2 
+                                "HR2id" :2 
                                                             
                 }}
         orm_mode = True
@@ -40,7 +40,7 @@ class employeeattendance2_modify(BaseModel):
                                 "type" : "str",
                                 "Employee2id" : 2,
                                 "Admin2id" : 2 ,
-                                "Hr2id" :2 
+                                "HR2id" :2 
                                                             
                 }}
         orm_mode = True

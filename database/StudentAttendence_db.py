@@ -39,17 +39,21 @@ async def searchSTD_attendence(STD_attendence_id : str)->dict:
 async def addSTD_attendence(details):
 
     Student_id_check = details['Studentid']
-    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+    try:
+        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+    except:
+        raise HTTPException(204,"details not found for Student")
     if student_found:
         # details['Studentid']=student_found
         col_STD_attendence.insert_one(details) # Changing ki hab 
         return True
 
 async def modifySTD_attendence(STD_attendence_id:str , details):
-    Student_id_check = str(details['Studentid'])
-    if Student_id_check:
+    if "Studentid" in details:
+        Student_id_check = str(details['Studentid'])
+
         try:
-            student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+            col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
         except:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                 detail=f'No record with id: {Student_id_check} found')

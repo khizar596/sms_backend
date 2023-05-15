@@ -4,16 +4,11 @@ from database.Student_db import col_student as cols
 from database.Admin_db import col_Admin as cola
 from database.Employee_db import col_employee as cole
 from database.Parents_db import col_parent as colp
-# from database.Teacher_db import col_Teacher as colT
-# from database.Staff2_db import col_Staff2 as colS
-# from database.HR2_db import col_HR2 as colhr
-# from database.Accountant2_db import col_Accountant2 as colA2
-# from database.StudentAdmin_db import col_StudentAdmin as colSA
+
 from database.auth import (
    AuthHandler,
    registration,
 )
-# from database.Employee_role_db import col_Employee_role,col_employee
 auth_handler= AuthHandler()
 users= []
 

@@ -22,8 +22,8 @@ async def view_Section(user=Depends(auth_handler.auth_wrapper)):
     response = await viewSection()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Section list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Sections" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

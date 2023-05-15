@@ -3,6 +3,7 @@ from database.Salary_db import (
     addSalary,
     viewSalary,
     modifySalary,
+    searchSalary,
     deleteSalaryid
 )
 from models.Salary2 import Salary2, Salary2_modify
@@ -25,16 +26,16 @@ async def view_Salarys_quiz(user=Depends(auth_handler.auth_wrapper)):
     response = await viewSalary()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Salarys_quiz list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Salarys_quizs" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{Salarys_quiz_id}")
-# async def search_Salarys_quiz(Salarys_quiz_id:str):
-#     # print(Salarys_quiz_id)
-#     response = await searchSalary(Salarys_quiz_id)
-#     return response
+@router.get("/{Salarys_quiz_id}")
+async def search_Salarys_quiz(Salarys_quiz_id:str):
+    # print(Salarys_quiz_id)
+    response = await searchSalary(Salarys_quiz_id)
+    return response
 
 
 

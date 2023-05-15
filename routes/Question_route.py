@@ -25,8 +25,8 @@ async def view_Questions_quiz(user=Depends(auth_handler.auth_wrapper)):
     response = await viewQuestions_quiz()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Questions_quiz list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Questions_quizs" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

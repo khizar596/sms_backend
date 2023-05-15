@@ -62,5 +62,5 @@ async def delete_id(examadminid: str):
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {examadminid} found')
-    return { "status " : status.HTTP_200_OK}
+    return { "status" : status.HTTP_200_OK}
 

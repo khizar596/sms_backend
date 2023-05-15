@@ -13,7 +13,7 @@ SMS=pymongo.MongoClient(f"mongodb+srv://roboticsworlddb:stemmind@cluster0.e3fby4
 # SMS = pymongo.MongoClient(
 #     "mongodb+srv://config['USER_NAME_DB']:config['PASSWORD_DB']@cluster0.v438msx.mongodb.net/?retryWrites=true&w=majority")
 
-sms_db = SMS.SMS_DB
+sms_db = SMS.sms_test
 
 # from pydantic import BaseSettings
 

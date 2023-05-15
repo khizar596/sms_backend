@@ -24,8 +24,8 @@ async def view_Std_comp(user=Depends(auth_handler.auth_wrapper)):
     response = await viewStd_comp()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Std_comp list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Std_comps" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
@@ -60,4 +60,4 @@ async def delete_id(id: str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
     return { "Status":"Succesfully deleted ",
-        "status_code " : status.HTTP_200_OK}
+        "status_code" : status.HTTP_200_OK}

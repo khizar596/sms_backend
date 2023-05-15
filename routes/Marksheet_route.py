@@ -23,16 +23,15 @@ async def view_marksheet(user=Depends(auth_handler.auth_wrapper)):
     response = await viewmarksheet()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "marksheet list" : response }
+            "status" : status.HTTP_200_OK, 
+            "marksheets" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{marksheet_id}")
-# async def search_marksheet(marksheet_id:str):
-#     # print(marksheet_id)
-#     response = await searchmarksheet(marksheet_id)
-#     return response
+@router.get("/{marksheet_id}")
+async def search_marksheet(marksheet_id:str):
+    response = await searchmarksheet(marksheet_id)
+    return response
 
 
 

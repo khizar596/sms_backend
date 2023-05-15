@@ -22,12 +22,14 @@ async def viewemployee():
 async def searchemployee(employee_id : str)->dict:
 
     document=  col_employee.find_one({"_id": ObjectId(employee_id)},{'_id': 0}) #ROLA WALA JAGA    
-    # document=  col_employee.find_one({"_id": ObjectId(employee_id)}) #ROLA WALA JAGA
     
     if not document:
 
         raise HTTPException(status_code=404, detail="Item not found")
-    
+    role=document['role'][0]['name']
+    roles=  colr.find_one({"name": role},{'_id': 1})  
+    if roles:
+        document['role'][0]['_id']=str(roles['_id'])
     return document
 
 
@@ -36,7 +38,8 @@ async def enrollemployee(details):
     cursor = col_employee.find({})
     roles_relation=employeedetails['role']
     role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
-
+    if role_relation==[None]:
+        raise HTTPException(405,"Role is not defined")
     for document in cursor:
         if document['cnic']==employeedetails['cnic']:
             response= {"CNIC " : "already exist "}
@@ -51,14 +54,15 @@ async def enrollemployee(details):
     return True
 
 async def modifyemployee(employee_id:str , details):
-    
+    if details['role']==[]:
+        del details['role']
     if  "role" in details:
         roles_relation=details['role']
         role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})] 
-    
+
         if role_relation==None:
             del details['role']
-    
+        details['role']=role_relation
     if  "password" in details:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed

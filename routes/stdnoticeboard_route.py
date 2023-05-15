@@ -22,8 +22,8 @@ async def view_stdnotice(user=Depends(auth_handler.auth_wrapper)):
     response = await viewstdnotice()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "stdnotice list" : response }
+            "status" : status.HTTP_200_OK, 
+            "stdnotices" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

@@ -11,7 +11,9 @@ async def viewClass():
     cursor = col_Class.find({})
 
     for document in cursor:
-        Classs.append((Class(**document)))
+        document['_id']= str(document['_id'])
+
+        Classs.append(document)
     return Classs
 
 async def searchClass(Class_id : str)->dict:
@@ -26,9 +28,8 @@ async def searchClass(Class_id : str)->dict:
 
 
 async def addClass(details):
-    Classdetails= details
     
-    col_Class.insert_one(Classdetails) # Changing ki hab 
+    col_Class.insert_one(details) # Changing ki hab 
     return True
 
 async def modifyClass(Class_id:str , details):

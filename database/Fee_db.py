@@ -14,11 +14,11 @@ async def viewfee():
 
     for document in cursor:
         Student_id_check = str(document['Studentid'])
-        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0,'first_name':1})
+
         if student_found:
+            document['_id']=str(document['_id'])
             document['Studentid']=student_found
-            col_fee.insert_one(document) 
-            return True
         fees.append(document)
     return fees
 
@@ -30,8 +30,8 @@ async def searchfee(fee_id : str)->dict:
 
         raise HTTPException(status_code=404, detail="Item not found")
     Student_id_check = str(document['Studentid'])
-    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-    if student_found:
+    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0,'first_name':1})
+    if student_found!=None:
         # document['_id']=str(document['_id'])
         document['Studentid']=student_found
         return document
@@ -39,26 +39,28 @@ async def searchfee(fee_id : str)->dict:
                             detail=f'No record with id: {Student_id_check} found')
 
 async def addfee(details):
-    feedetails= details
-    Student_id_check = str(feedetails['Studentid'])
-    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-    if student_found:
-        # feedetails['Studentid']=student_found
-        col_fee.insert_one(feedetails) 
+    Student_id_check = str(details['Studentid'])
+    try:
+        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+    except:
+        raise HTTPException(204,"Student id not found")
+    if student_found!=None:
+        col_fee.insert_one(details) 
         return True
-    return {"Id error":"Id of student doesn't exist"}
+    raise HTTPException(204,"Student id not found")
 
 
 async def modifyfee(fee_id:str , details):
-    Student_id_check = str(details['Studentid'])
-    if Student_id_check:
-        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-        if student_found:
-            pass
-        else:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No record with id: {Student_id_check} found')
-        # details['Studentid']=student_found
+    if "Studentid" in details:
+        
+        Student_id_check = str(details['Studentid'])
+        if Student_id_check:
+            student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
+            if student_found and student_found!=None:
+                pass
+            else:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail=f'No record with id: {Student_id_check} found')
     col_fee.update_one({"_id": ObjectId(fee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

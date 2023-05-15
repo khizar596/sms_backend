@@ -35,8 +35,8 @@ class Quiz(BaseModel):
 class Quiz_modify(BaseModel):
     name : Optional[str]
     date : Optional[Union[str,date]]
-    start_time : Union[str, datetime]
-    end_time : Optional[int]  = Field(default= 10)
+    start_time : Optional[Union[str, datetime]]
+    end_time : Optional[int]
     total_marks : Optional[int] 
     total_question : Optional[int]
     Class_subjectid : Optional[str]

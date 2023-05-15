@@ -1,6 +1,7 @@
 from fastapi import FastAPI , HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from settings import sms_db
+from mangum import Mangum
 from routes import (   Employee_role_route,Examinationadmin_route,Accountant2_route,HR2_route,StudentAdmin_route,Staff2_route,Teacher_route,Userlogin_route,Admin_route,stdnoticeboard_route,student_route,Salary_route,Section_route,
                         StudentAttendence_route,Studentcomplain_route,Parent_route,
                         Assignment_route,EmpAttendence_route,EmpComplain_route,
@@ -18,10 +19,12 @@ from routes import (   Employee_role_route,Examinationadmin_route,Accountant2_ro
 #                     Marksheet,Questions,Quiz,Salary2,Section,Staff2)
 #App Creations
 app=FastAPI()
+handler= Mangum(app)
 sms_db=sms_db
 origins = [
     "http://localhost",
-    "http://localhost:8000"
+    "http://localhost:8000",
+    "*"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -78,3 +81,6 @@ app.include_router(Course_route.router)
 app.include_router(Chatbox_route.router)
 app.include_router(Assignment_route.router)
 app.include_router(Classsubject_route.router)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run("main:app", host="127.0.0.1", port=8000, log_level="info")

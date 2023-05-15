@@ -9,9 +9,9 @@ class Timetable(BaseModel):
     day  : int=Field (..., ge=1, le=31)
     start_time  : Union[str,datetime]
     end_time :   Union[str,datetime]
-    Sectionid: List
-    Class_subjectid: List
-    Teacherid: List
+    Sectionid: str
+    Class_subjectid: str
+    Teacherid: str
 
     class Config:
         schema_extra ={
@@ -19,10 +19,10 @@ class Timetable(BaseModel):
                             "day":3,
                             "start_time":datetime.now().time(),
                             "end_time":datetime.now().time(),
-                            "Teacherid":["teacherid"],
+                            "Teacherid":"teacherid",
 
-                            "Sectionid":["sectionid"],
-                            "Class_subjectid": ["classsubjectid"]
+                            "Sectionid":"sectionid",
+                            "Class_subjectid": "classsubjectid"
                             }
         }
         orm_mode = True
@@ -33,10 +33,10 @@ class Timetable_modify(BaseModel):
     day  : Optional[int]
     start_time  : Optional[Union[str,datetime]]
     end_time :  Optional[Union[str,datetime]]
-    Teacherid:  List
+    Teacherid:  Optional[str]
 
-    Sectionid: Optional[List]
-    Class_subjectid: Optional[List]
+    Sectionid: Optional[str]
+    Class_subjectid: Optional[str]
     
     class Config:
         schema_extra ={
@@ -44,9 +44,9 @@ class Timetable_modify(BaseModel):
                             "day":4,
                             "start_time":datetime.now().time(),
                             "end_time":datetime.now().time(),
-                            "Teacherid":["teacherid"],
-                            "Sectionid":["sectionid"],
-                            "Class_subjectid": ["classsubjectid"]
+                            "Teacherid":"teacherid",
+                            "Sectionid":"sectionid",
+                            "Class_subjectid": "classsubjectid"
                             }
         }
         orm_mode = True

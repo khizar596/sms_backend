@@ -5,7 +5,7 @@ from datetime import date
 
 class Exam(BaseModel):
     name: str
-    year: Optional[Union[str,date]]
+    year: Union[str,date]
     class Config:
         schema_extra = {
             "example": {

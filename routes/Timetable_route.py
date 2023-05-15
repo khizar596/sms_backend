@@ -23,16 +23,16 @@ async def view_timetable(user=Depends(auth_handler.auth_wrapper)):
     response = await viewtimetable()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "timetable list" : response }
+            "status" : status.HTTP_200_OK, 
+            "timetables" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{timetable_id}")
-# async def search_timetable(timetable_id:str):
-#     # print(timetable_id)
-#     response = await searchtimetable(timetable_id)
-#     return response
+@router.get("/{timetable_id}")
+async def search_timetable(timetable_id:str):
+    # print(timetable_id)
+    response = await searchtimetable(timetable_id)
+    return response
 
 
 
@@ -40,7 +40,7 @@ async def view_timetable(user=Depends(auth_handler.auth_wrapper)):
 async def create_timetable(timetable : Timetable):
     response = await addtimetable(timetable.dict())
     if response==True:
-        return {"response ": "Successfully added . . .",
+        return {"response": "Successfully added . . .",
             "status" : status.HTTP_200_OK}       
     return {"response" : response, "status" :status.HTTP_203_NON_AUTHORITATIVE_INFORMATION }
 

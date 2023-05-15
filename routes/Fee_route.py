@@ -23,11 +23,10 @@ async def view_fee(user=Depends(auth_handler.auth_wrapper)):
     auth_handler.has_permission(user, 'view_employee')
 
     response = await viewfee()
-    print(response)
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "fee list" : response }
+            "status" : status.HTTP_200_OK, 
+            "feeses" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
@@ -61,4 +60,4 @@ async def delete_id(id: str):
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
-    return { "status " : status.HTTP_200_OK}
+    return { "status" : status.HTTP_200_OK}

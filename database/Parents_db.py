@@ -37,8 +37,10 @@ async def addparent(details):
     parentdetails= details
     
     roles_relation=parentdetails['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
-    print(role_relation)
+    try:
+        role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
+    except:
+        raise HTTPException(204,"Roles not found")
     if details['password']:
         hashed = auth_handler.get_password_hash(details['password'])
         details['password']=hashed

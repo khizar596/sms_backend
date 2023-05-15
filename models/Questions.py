@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 class Question(BaseModel):
-    question : str 
+    question : str          
     option : str 
     answer : str 
     timer : int

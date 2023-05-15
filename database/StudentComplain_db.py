@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from bson import ObjectId
 from database.Admin_db import col_Admin
 from database.Student_db import col_student
-from database.StudentAdmin_db import col_StudentAdmin
+from database.StudentAdmin_db import col_employee
 # is k andr studnet admin ko complete kr k  dalna ha 
 col_Std_comp = sms_db.Std_complain
 from models.StudentComplain import StudentComplain
@@ -11,63 +11,76 @@ from models.StudentComplain import StudentComplain
 
 
 async def viewStd_comp():
-    Std_comps=[]
+    Emp_comps=[]
     cursor = col_Std_comp.find({})
 
     for document in cursor:
-        Student_id_check = str(document['Studentid'])
-        student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-        if student_found:
-            document['Studentid']=student_found
-        else:
-            raise ValueError
-        StudentAdminid = str(document['StudentAdminid'])
-        studentadm_found=  col_StudentAdmin.find_one({"_id": ObjectId(StudentAdminid)},{'_id': 0})
-        if studentadm_found:
-            document['StudentAdminid']=StudentAdminid
-        else:
-            raise ValueError
-        Std_comps.append((StudentComplain(**document)))
-    return Std_comps
+        Student2id_relation = col_student.find_one({"_id": ObjectId(document['Studentid'])}, {'_id': 0,'first_name':1})
+        STdadm_relation = col_employee.find_one({"_id": ObjectId(document['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        if not None and Student2id_relation and STdadm_relation and Admin2id_relation:
+            document['_id']=str(document['_id'])
+            document['Studentid'] = Student2id_relation
+            document['StudentAdminid'] = STdadm_relation
+            document['Admin2id'] = Admin2id_relation
+            document['_id']=str(document['_id'])
+
+        Emp_comps.append(document)
+    return Emp_comps
 
 async def searchStd_comp(Std_comp_id : str)->dict:
 
-    document=  col_Std_comp.find_one({"_id": ObjectId(Std_comp_id)},{'_id': 0}) 
+    document=  col_Std_comp.find_one({"_id": ObjectId(Std_comp_id)}) 
     
     if not document:
 
         raise HTTPException(status_code=404, detail="Item not found")
-    Student_id_check = str(document['Studentid'])
-    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-    if student_found:
-        document['Studentid']=student_found
-    else:
-            raise ValueError
-    StudentAdminid = str(document['StudentAdminid'])
-    studentadm_found=  col_StudentAdmin.find_one({"_id": ObjectId(StudentAdminid)},{'_id': 0})
-    if studentadm_found:
-        document['StudentAdminid']=StudentAdminid
-    else:
-            raise ValueError
+    Student2id_relation = col_student.find_one({"_id": ObjectId(document['Studentid'])}, {'_id': 0,'first_name':1})
+    STdadm_relation = col_employee.find_one({"_id": ObjectId(document['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+    Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+    if not None and Student2id_relation and STdadm_relation and Admin2id_relation:
+        document['_id']=str(document['_id'])
+        document['Studentid'] = Student2id_relation
+        document['StudentAdminid'] = STdadm_relation
+        document['Admin2id'] = Admin2id_relation
     return document
 
-
 async def addStd_comp(details):
-    Std_compdetails= details
+    if  "Studentid" in details:
+        Studentid_relation = col_student.find_one({"_id": ObjectId(details['Studentid'])}, {'_id': 0,'first_name':1})
 
-    Student_id_check = str(Std_compdetails['Studentid'])
-    StudentAdminid = str(details['StudentAdminid'])
-
-    studentadm_found=  col_StudentAdmin.find_one({"_id": ObjectId(StudentAdminid)},{'_id': 0})
-    Student_id_check = str(details['Studentid'])
-    student_found=  col_student.find_one({"_id": ObjectId(Student_id_check)},{'_id': 0})
-   
-    if student_found!=None and studentadm_found!=None:
-        # Std_compdetails['Studentid']=student_found
-        col_Std_comp.insert_one(Std_compdetails) 
-        return True
-    raise LookupError
+        if Studentid_relation==None:
+            raise HTTPException(204, detail="Employee not found")
+    if "StudentAdminid" in details:
+        stdadm_relation = col_employee.find_one({"_id": ObjectId(details['StudentAdminid']), 'role.0.name': 'Student Admin'}, {'_id': 0,'first_name':1})
+        if stdadm_relation==None:
+            raise HTTPException(204, detail="stdadm not found")
+    if "Admin2id" in details:
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(details['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        
+        if Admin2id_relation==None:
+            raise HTTPException(204, detail="Admin not found")
+    col_Std_comp.insert_one(details) 
+    return True
+    
+    
 async def modifyStd_comp(Std_comp_id:str , details):
+    if  "Studentid" in details:
+        Studentid_relation = col_student.find_one({"_id": ObjectId(details['Studentid'])}, {'_id': 0,'first_name':1})
+
+        if Studentid_relation==None:
+            del details['Studentid']
+    if "StudentAdminid" in details:
+        HR_relation = col_employee.find_one({"_id": ObjectId(details['StudentAdminid']), 'role.0.name': 'HR'}, {'_id': 0,'first_name':1})
+        if HR_relation==None:
+            del details['StudentAdminid']
+    if "Admin2id" in details:
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(details['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        
+        if Admin2id_relation==None:
+            del details['Admin2id']
+    
+    
     col_Std_comp.update_one({"_id": ObjectId(Std_comp_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 

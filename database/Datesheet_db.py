@@ -22,6 +22,7 @@ async def viewdatesheet():
         Examid_found=  col_Exam.find_one({"_id": ObjectId(Examid_check)},{'_id': 0})
         
         if Class_subjectid_found and Examid_found:
+            document['_id']=str(document['_id'])
             document['Examid']=Examid_found
             document['Sectionid']=sectionid_found
             document['Class_subjectid']=Class_subjectid_found
@@ -52,7 +53,6 @@ async def searchdatesheet(datesheet_id : str)->dict:
     raise ValueError
 
 async def adddatesheet(details):
-    datesheetdetails= details
     classsubj_id_check = str(details['Class_subjectid'])
     Class_subjectid_found=  col_Classsubject.find_one({"_id": ObjectId(classsubj_id_check)},{'_id': 0})
     Examid_check = str(details['Examid'])
@@ -60,31 +60,31 @@ async def adddatesheet(details):
     sectionid_check = str(details['Sectionid'])
     sectionid_found=  col_Section.find_one({"_id": ObjectId(sectionid_check)},{'_id': 0})
 
-    if Class_subjectid_found and Examid_found and sectionid_found:
-        col_datesheet.insert_one(datesheetdetails) # Changing ki hab 
+    if Class_subjectid_found!=None and Examid_found!=None and sectionid_found!=None:
+        col_datesheet.insert_one(details) # Changing ki hab 
         return True
     raise HTTPException(status_code=403,detail="Details are not valid")
 
 async def modifydatesheet(datesheet_id:str , details):
-    datesheetdetails= details
-    try:
-        sectionid_check = str(details['Sectionid'])
-        sectionid_found=  col_Section.find_one({"_id": ObjectId(sectionid_check)},{'_id': 0})
-
-        classsubj_id_check = str(details['Class_subjectid'])
-        Class_subjectid_found=  col_Classsubject.find_one({"_id": ObjectId(classsubj_id_check)},{'_id': 0})
-        Examid_check = str(details['Examid'])
-        Examid_found=  col_Exam.find_one({"_id": ObjectId(Examid_check)},{'_id': 0})
-        
-        if Examid_found:
-            pass
-        if sectionid_found:
-            pass
-        if Class_subjectid_found:
-            pass
-    except:
-        pass
-    col_datesheet.update_one({"_id": ObjectId(datesheet_id)}, {"$set": datesheetdetails})
+    if 'Sectionid' in details:
+        try:
+            
+            col_Section.find_one({"_id": ObjectId( details['Sectionid'])},{'_id': 0})
+        except:
+            raise HTTPException(204, "Enter correct Examid")
+    if 'Class_subjectid' in details:
+        try:
+            col_Classsubject.find_one({"_id": ObjectId( details['Class_subjectid'])},{'_id': 0})    
+        except:
+            raise HTTPException(204,"Enter correct Student id")
+    if 'Examid' in details:
+        try:
+            
+            col_Exam.find_one({"_id": ObjectId( details['Examid'])},{'_id': 0})
+        except:
+            raise HTTPException(204, "Enter correct Examid")
+    
+    col_datesheet.update_one({"_id": ObjectId(datesheet_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 async def deletedatesheetid(datesheet_id:str):

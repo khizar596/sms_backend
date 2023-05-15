@@ -2,7 +2,6 @@ from settings import sms_db
 from fastapi import HTTPException
 from bson import ObjectId
 from models.StudentAdmin import StudentAdmin, StudentAdmin_modify
-col_StudentAdmin = sms_db.StudentAdmin
 from database.Employee_db import col_employee, colr
 
 from database.auth import AuthHandler
@@ -13,15 +12,15 @@ auth_handler=AuthHandler()
 
 async def viewStudentAdmin():
     employees=[]
-    cursor = col_StudentAdmin.find({'role.0.name':'std_admin'})
+    cursor = col_employee.find({'role.0.name':'Student Admin'})
 
     for document in cursor:
-        employees.append((StudentAdmin(**document)))
+        document['_id']=str(document['_id'])
+        employees.append(document)
     return employees
-
 async def searchStudentAdmin(employee_id : str)->dict:
 
-    document=  col_employee.find_one({"_id": ObjectId(employee_id),'role.0.name':'student_admin'},{'_id':0})
+    document=  col_employee.find_one({"_id": ObjectId(employee_id),'role.0.name':'Student Admin'},{'_id':0})
     if not document:
 
         raise HTTPException(status_code=404, detail="Item not found")
@@ -34,10 +33,9 @@ async def addStudentAdmin(details):
     employeedetails= details
     cursor = col_employee.find({})
     roles_relation=details['role']
-    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0]),'role.0.name':'std_admin'},{'_id': 0})]
-
-    if role_relation!=None:
-        details['role']=role_relation
+    role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
+    if role_relation==[None]:
+            raise HTTPException(405,"Role is not defined")
     for document in cursor:
         if document['cnic']==employeedetails['cnic']:
             response= {"CNIC " : "already exist "}
@@ -47,32 +45,36 @@ async def addStudentAdmin(details):
             return response
         elif not role_relation:
             raise HTTPException(status_code=404,detail="Please specify role")
-    if role_relation=="student_admin":
-        employeedetails['role']=role_relation
-
+    if role_relation:
         hashed = auth_handler.get_password_hash(employeedetails['password'])
+        employeedetails['role']=role_relation
         employeedetails['password']=hashed
+  
         col_employee.insert_one(employeedetails) # Changing ki hab 
         return True
     else:
-        return "Change your role kindly"
-
+        return "Check your role kindly"
 async def modifyStudentAdmin(employee_id:str , details):
-    if details['password']:
-        hashed = auth_handler.get_password_hash(details['password'])
-        details['password']=hashed
-    if details['role']==[]:
-        del details['role']
-    if details['role']:
-        try:
-            employe_role=details['role'][0]
-            role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
-            details['role']=role_relation
-        except:
-            raise HTTPException(203)
-    col_StudentAdmin.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
+    if 'password' in details:
+        if details['password']:
+            hashed = auth_handler.get_password_hash(details['password'])
+            details['password']=hashed
+    if 'role' in details:
+        if details['role']==[] or details['role']==[None]:
+            del details['role']
+
+        else:
+
+            try:
+                employe_role=details['role'][0]
+                role_relation= [colr.find_one({"_id": ObjectId(employe_role)},{'_id': 0})]
+                details['role']=role_relation
+            except:
+                raise HTTPException(203, "define the role")
+    col_employee.update_one({"_id": ObjectId(employee_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
+
 async def deleteStudentAdminid(employee_id:str):
-    col_StudentAdmin.delete_one({'_id': ObjectId(employee_id)})
+    col_employee.delete_one({'_id': ObjectId(employee_id)})
     return True

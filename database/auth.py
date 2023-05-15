@@ -69,8 +69,8 @@ class AuthHandler():
                 'search_stdcomp','add_stdcomp', 'modify_stdcomp','view_stdcomp','delete_stdcomp',
                 'search_parent','add_parent', 'modify_parent','view_parent','delete_parent',
                 'search_accountant','add_accountant', 'modify_accountant','view_accountant','delete_accountant',
-                'search_subject','add_subject', 'modify_subject','view_subject','delete_subject'
-                'search_staff','add_staff', 'modify_staff','view_staff','delete_staff'
+                'search_subject','add_subject', 'modify_subject','view_subject','delete_subject',
+                'search_staff','add_staff', 'modify_staff','view_staff','delete_staff',
                 'search_stdnotic','add_stdnotic', 'modify_stdnotic','view_stdnotic','delete_stdnotic',
                 'search_stdattendence','add_stdattendence', 'modify_stdattendence','view_stdattendence','delete_stdattendence',
                 'search_course','add_course', 'modify_course','view_course','delete_course',

@@ -41,7 +41,6 @@ async def search_StudentAdmin(StudentAdmin_id:str):
 
 @router.post("/")
 async def enroll_StudentAdmin(details : StudentAdmin):
-    
     response = await addStudentAdmin(details.dict())
     if response==True:
         return {"response": "Successfully created . . .",

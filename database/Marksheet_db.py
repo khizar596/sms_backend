@@ -17,7 +17,7 @@ async def viewmarksheet():
    
     for document in cursor:
         exam_relation=  col_Exam.find_one({"_id": ObjectId( document['Examid'])},{'_id': 0})
-        student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0})    
+        student_relation=  col_student.find_one({"_id": ObjectId( document['Studentid'])},{'_id': 0,'first_name':1})    
         
         if exam_relation!=None and student_relation !=None :
             document['Examid'] = exam_relation
@@ -30,7 +30,6 @@ async def viewmarksheet():
 async def searchmarksheet(marksheet_id : str)->dict:
 
     document=  col_marksheet.find_one({"_id": ObjectId(marksheet_id)},{'_id': 0}) 
-    
     if not document:
 
         raise HTTPException(status_code=404, detail="document not found")

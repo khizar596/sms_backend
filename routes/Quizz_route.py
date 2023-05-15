@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException , status,Depends
 from database.Quizz_db import (
     viewQuizz,
     modifyQuizz,
-    # searchQuizz,
+    searchQuizz,
     deleteQuizzid,
     addQuizz
     )
@@ -24,16 +24,16 @@ async def view_Quizzs_quiz(user=Depends(auth_handler.auth_wrapper)):
     response = await viewQuizz()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Quizzs_quiz list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Quizzes" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{Quizzs_quiz_id}")
-# async def search_Quizzs_quiz(Quizzs_quiz_id:str):
-#     # print(Quizzs_quiz_id)
-#     response = await searchQuizz(Quizzs_quiz_id)
-#     return response
+@router.get("/{Quizzs_quiz_id}")
+async def search_Quizzs_quiz(Quizzs_quiz_id:str):
+    # print(Quizzs_quiz_id)
+    response = await searchQuizz(Quizzs_quiz_id)
+    return response
 
 
 

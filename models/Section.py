@@ -8,13 +8,13 @@ from typing import Optional , List
 class Section(BaseModel):
     name : str 
     total_student: int
-    Classid: List
+    Classid: str
     class Config:
         schema_extra = {
             "example": {
                            "name" : "str" ,
                             "total_student": 23,
-                            "Classid": ["str" ],
+                            "Classid": "str" ,
             }
         }
         orm_mode = True
@@ -24,14 +24,14 @@ class Section(BaseModel):
 
 class Section_modify(BaseModel):
     name : Optional[str] 
-    total_student: Optional[str]
-    Classid: Optional[List]
+    total_student: Optional[int]
+    Classid: Optional[str]
     class Config:
         schema_extra = {
             "example": {
                            "name" : "str" ,
                             "total_student": 23,
-                            "Classid": ["str"] ,
+                            "Classid": "str" ,
             }
         }
         orm_mode = True

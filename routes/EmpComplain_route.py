@@ -3,7 +3,7 @@ from database.employeecomplain_db import (
     viewEmp_comp,
     addEmp_comp,
     modifyEmp_comp,
-    deletebyid
+    deletebyid,searchEmp_comp
 )
 from models.EmployeeComplain import EmployeeComplain,EmployeeComplain_modify
 from database.auth import AuthHandler
@@ -23,16 +23,15 @@ async def view_Emp_comp(user=Depends(auth_handler.auth_wrapper)):
     response = await viewEmp_comp()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Emp_comp list" : response }
+            "status" : status.HTTP_200_OK, 
+            "Emp_comps" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{Emp_comp_id}")
-# async def search_Emp_comp(Emp_comp_id:str):
-#     # print(Emp_comp_id)
-#     response = await searchEmp_comp(Emp_comp_id)
-#     return response
+@router.get("/{Emp_comp_id}")
+async def search_Emp_comp(Emp_comp_id:str):
+    response = await searchEmp_comp(Emp_comp_id)
+    return response
 
 
 

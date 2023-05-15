@@ -13,7 +13,7 @@ class StudentAttendence(BaseModel):
             "example": {
                                 "date" : date.today(),
                                 "type" : "str",
-                                "Studentid" : ["2"],
+                                "Studentid" : "2",
                                 
                                                             
                 }}
@@ -23,7 +23,7 @@ class StudentAttendence(BaseModel):
 
     
 class StudentAttendence_modify(BaseModel):
-    date: Union[str,date]
+    date: Optional[Union[str,date]]
     type : Optional[str]
     Studentid: Optional[str]
     class Config:

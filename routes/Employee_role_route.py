@@ -27,8 +27,8 @@ async def view_Employee_role(user=Depends(auth_handler.auth_wrapper)):
     response = await viewEmployee_role()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "Employee_role list" : response }
+            "status" : status.HTTP_200_OK, 
+            "roles" : response}
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

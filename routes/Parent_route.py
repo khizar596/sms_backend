@@ -25,8 +25,8 @@ async def view_parent(user=Depends(auth_handler.auth_wrapper)):
     response = await viewparent()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "parent list" : response }
+            "status" : status.HTTP_200_OK, 
+            "parents" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
@@ -64,4 +64,4 @@ async def delete_id(id: str,user=Depends(auth_handler.auth_wrapper)):
     if not response:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
-    return { "status " : status.HTTP_200_OK}
+    return { "status" : status.HTTP_200_OK}

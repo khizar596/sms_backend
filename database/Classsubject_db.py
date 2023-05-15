@@ -43,29 +43,36 @@ async def searchClasssubject(Classsubject_id : str)->dict:
 
 
 async def addClasssubject(details):
-    Classsubjectdetails= details
-    class_relation=  col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'])},{'_id': 0})
-    Teacher_relation=  cole.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'])},{'_id': 0,'first_name':1})
-    Course_relation=  col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+    try:
+        class_relation=  col_Class.find_one({"_id": ObjectId( details['Classid'])},{'_id': 0})
+    except:
+        raise HTTPException(204,"Class id not found")
+    try:
+        Teacher_relation=  cole.find_one({"_id": ObjectId(details['Teacherid']),'role.0.name':'Teacher'},{'_id': 0,'first_name':1})
+    except:
+        raise HTTPException(204,"Teacher not found")
+    try:
+        Course_relation=  col_Course.find_one({"_id": ObjectId( details['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+    except:
+        raise HTTPException(204, "Course id not found")
     if class_relation!=None and Course_relation !=None and Teacher_relation !=None :
-        col_Classsubject.insert_one(Classsubjectdetails) # Changing ki hab 
+        col_Classsubject.insert_one(details) # Changing ki hab 
         return True
 
-    return HTTPException(203)
+    return HTTPException(203, "Data is missing in database")
 
 async def modifyClasssubject(Classsubject_id:str , details):
-    Classsubjectdetails= details
     if  "Classid" in details:
-        class_relation=  col_Class.find_one({"_id": ObjectId( Classsubjectdetails['Classid'])},{'_id': 0})  
+        class_relation=  col_Class.find_one({"_id": ObjectId( details['Classid'])},{'_id': 0})  
 
         if class_relation==None:
             del details['Classid']
     if "Teacherid" in details:
-        Teacher_relation=  cole.find_one({"_id": ObjectId( Classsubjectdetails['Teacherid'])},{'_id': 0,'first_name':1})
+        Teacher_relation=  cole.find_one({"_id": ObjectId( details['Teacherid'])},{'_id': 0,'first_name':1})
         if Teacher_relation==None:
             del details['Teacherid']
     if "Courseid" in details:
-        Course_relation=  col_Course.find_one({"_id": ObjectId( Classsubjectdetails['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
+        Course_relation=  col_Course.find_one({"_id": ObjectId( details['Courseid'])},{'_id': 0}) #ROLA WALA JAGA    
         
         if Course_relation==None:
             del details['Courseid']

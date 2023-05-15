@@ -3,7 +3,8 @@ from database.Empnoticeboard2_db import(
     addempnotice,
     viewempnotice,
     modifyempnotice,
-    deleteempnoticeid
+    deleteempnoticeid,
+    searchempnotice
 )
 from models.EmployeeNoticeboard2 import Emp_noticeboard_modify, Emp_noticeboard
 from database.auth import AuthHandler
@@ -22,16 +23,16 @@ async def view_empnotice(user=Depends(auth_handler.auth_wrapper)):
     response = await viewempnotice()
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "empnotice list" : response }
+            "status" : status.HTTP_200_OK, 
+            "empnotices" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 
-# @router.get("/{empnotice_id}")
-# async def search_empnotice(empnotice_id:str):
-#     # print(empnotice_id)
-#     response = await searchempnotice(empnotice_id)
-#     return response
+@router.get("/{empnotice_id}")
+async def search_empnotice(empnotice_id:str):
+    # print(empnotice_id)
+    response = await searchempnotice(empnotice_id)
+    return response
 
 
 

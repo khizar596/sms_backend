@@ -27,7 +27,7 @@ class Employee2(BaseModel):
     branch_code: str
     blood_group : str
     relegion : str
-    role : List = Field(default='staff')
+    role : List =[]
 
     class Config:
         orm_mode = True
@@ -54,7 +54,7 @@ class Employee2(BaseModel):
                                 "branch_code": "str",
                                 "blood_group" : "str",
                                 "relegion" : "str",
-                                "role" : ["Teacher"]
+                                "role" : ["employeerole"]
                             }
         }
 class Employee2_modify(BaseModel):
@@ -77,7 +77,7 @@ class Employee2_modify(BaseModel):
     branch_code: Optional[str]
     blood_group : Optional[str]
     relegion : Optional[str]
-    role : Optional[List] = Field(default='staff')
+    role : Optional[List] =[]
 
     class Config:
         orm_mode = True
@@ -104,6 +104,6 @@ class Employee2_modify(BaseModel):
                                 "branch_code": "str",
                                 "blood_group" : "str",
                                 "relegion" : "str",
-                                "role" : ["Teacher"]
+                                "role" : ["employeerole"]
                             }
         }

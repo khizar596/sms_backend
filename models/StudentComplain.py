@@ -8,17 +8,17 @@ from typing import Optional, List
 class StudentComplain(BaseModel):
     subject: str
     description : str
-    Studentid : List=[]
-    Admin2id  : List=[]
-    StudentAdminid : List=[]
+    Studentid : str
+    Admin2id  : str
+    StudentAdminid : str
     class Config:
         schema_extra = {
             "example": {
                            "subject": "Title",
                             "description": "type subject",
-                            "Studentid": ["Student's id "],
-                            "Admin2id": ["Admin2id's id "],
-                            "StudentAdminid": ["StudentAdminid's id "]
+                            "Studentid": "Student's id ",
+                            "Admin2id": "Admin2id's id ",
+                            "StudentAdminid": "StudentAdminid's id "
                             
                             
             }
@@ -40,17 +40,17 @@ from typing import Optional
 class StudentComplain_modify(BaseModel):
     subject: Optional['str']
     description : Optional['str']
-    Studentid : Optional[List]
-    Admin2id  : Optional[List]
-    StudentAdminid : Optional[List]
+    Studentid : Optional[str]
+    Admin2id  : Optional[str]
+    StudentAdminid : Optional[str]
     class Config:
         schema_extra = {
             "example": {
                             "subject": "Title",
                             "description": "type subject",
-                            "Studentid": ["Student's id"],
-                            "Admin2id": ["Admin2id's id "],
-                            "StudentAdminid": ["StudentAdminid's id "]
+                            "Studentid": "Student's id",
+                            "Admin2id": "Admin2id's id ",
+                            "StudentAdminid": "StudentAdminid's id "
                             
                             
             }
@@ -58,3 +58,4 @@ class StudentComplain_modify(BaseModel):
         orm_mode = True
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
+  

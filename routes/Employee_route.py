@@ -25,11 +25,10 @@ async def view_employee(user = Depends(auth_handler.auth_wrapper)):
     auth_handler.has_permission(user, 'view_employee')
     
     response = await viewemployee()
-    print(response)
     if response: 
         return {
-            "status " : status.HTTP_200_OK, 
-            "employee list" : response }
+            "status" : status.HTTP_200_OK, 
+            "employeelist" : response }
     return {"error": status.HTTP_204_NO_CONTENT} 
 
 

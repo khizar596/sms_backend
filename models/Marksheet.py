@@ -11,8 +11,8 @@ class Marksheet(BaseModel):
     grade : str
     comment : str 
     percentage: int
-    Examid : List=[]
-    Studentid: List= []
+    Examid : str
+    Studentid: str
     class Config:
         schema_extra ={
             "example": {
@@ -21,8 +21,8 @@ class Marksheet(BaseModel):
                             "grade" : "A",
                             "comment" : "Good" ,
                             "percentage": 23,
-                            "Examid" : ["23"],
-                            "Studentid": ["23"],
+                            "Examid" : "23",
+                            "Studentid": "23",
      }
         }
         orm_mode = True
@@ -49,8 +49,8 @@ class Marksheet_modify(BaseModel):
                             "grade" : "A",
                             "comment" : "Good" ,
                             "percentage": 23,
-                            "Examid" : ["23"],
-                            "Studentid": ["23"],
+                            "Examid" : "23",
+                            "Studentid": "23",
      }
         }
         orm_mode = True
