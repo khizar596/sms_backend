@@ -14,8 +14,7 @@ async def viewSalary():
    
     for document in cursor:
         try:
-            Employee2id_relation=  cole.find_one({"_id": ObjectId( document['Employee2id'])},{'_id': 0,'first_name':1})
-            print(Employee2id_relation)
+            Employee2id_relation=  cole.find_one({"_id": ObjectId( document['Employee2id'])},{'_id': 1,'first_name':1})
 
         except:
             raise HTTPException(204,"student admin not found")       
@@ -30,10 +29,15 @@ async def viewSalary():
         except:
             raise HTTPException(204,"Accountant not found")
         if Employee2id_relation and Admin2id_relation and Accountant2id_relation:
+            document['_id']= str(document['_id'])    
+
             document['Admin2id'] = Admin2id_relation
+            Employee2id_relation['_id']= str(Employee2id_relation['_id'])    
+
             document['Employee2id'] = Employee2id_relation 
+
             document['Accountant2id'] = Accountant2id_relation 
-            document['_id']= str(document['_id'])        
+    
             col_Salarys.append(document)
         
     return col_Salarys

@@ -6,7 +6,9 @@ col_student = sms_db.Student
 from database.auth import AuthHandler,colr
 from models.Parent import Parent
 from database.Class_db import col_Class
-from database.Parents_db import col_parent
+from fastapi.responses import FileResponse
+import os
+import shutil
 auth_handler=AuthHandler()
 
 
@@ -43,61 +45,80 @@ async def searchStudent(student_id: str) -> dict:
     return document
 
 
-async def enrollstudent(details):
-    studentdetails= details
+async def enrollstudent(details,image):
     cursor = col_student.find({})
 
     for document in cursor:
-        if document['cnic']==studentdetails['cnic']:
+        if document['cnic']==details['cnic']:
             response= {"CNIC " : "already exist "}
             return response
-        if document['email']==studentdetails['email']:
+        if document['email']==details['email']:
             response={"Email " : "already exist "}    
             return response
+        #IMAGE LOGIC
+    image_url = None
     
+    intial='http://localhost:8000/student'
+    if image is not None:
+        file_path = os.path.join(os.getcwd(), 'profile_pics', image.filename)
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
+        image_url = f"{intial}/profile_pics/{image.filename}"
+    
+    details['image']=image_url
     #### PASWORD HASHED
-
-    hashed = auth_handler.get_password_hash(studentdetails['password'])
-    studentdetails['password']=hashed
+    print(image_url)
+    hashed = auth_handler.get_password_hash(details['password'])
+    details['password']=hashed
     
     #### Relations
     try:
-        class_relation=  col_Class.find_one({"_id": ObjectId(str( studentdetails['class_id']))},{'_id': 0})
+        class_relation=  col_Class.find_one({"_id": ObjectId(str( details['class_id']))},{'_id': 0})
     except:
         raise HTTPException(204,"classid not found")
-    roles_relation=studentdetails['role']
+    roles_relation=details['role']
     role_relation= [colr.find_one({"_id": ObjectId(roles_relation[0])},{'_id': 0})]
 
     if class_relation  != None and role_relation != None:
-        studentdetails['role']=role_relation
+        details['role']=role_relation
 
-        col_student.insert_one(studentdetails) # Changing ki hab 
+        col_student.insert_one(details) # Changing ki hab 
         return True
     return False
 
 
     
-async def modifystudent(student_id:str , details):
-    studentdetails=details  
-    if 'password' in studentdetails and studentdetails['password'] != '':
+async def modifystudent(student_id:str , details,image):
+    if 'password' in details and details['password'] != '':
         hashed = auth_handler.get_password_hash(details['password'])
-        studentdetails['password']=hashed
+        details['password']=hashed
 
 
     #### MODIFY Relations 
-    if 'role' in studentdetails and studentdetails['role'] != '':
+    if 'role' in details and details['role'] != '':
     
-        del studentdetails['role']    
+        del details['role']    
  
-    if 'class_id' in studentdetails and studentdetails['class_id'] != '':
-        classid=studentdetails['class_id']
-        class_relation= col_Class.find_one({"_id": ObjectId(str(studentdetails['class_id']))},{'_id': 0})
+    if 'class_id' in details and details['class_id'] != '':
+        classid=details['class_id']
+        class_relation= col_Class.find_one({"_id": ObjectId(str(details['class_id']))},{'_id': 0})
         if class_relation:
             pass
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {classid} found')
-    col_student.update_one({"_id": ObjectId(student_id)}, {"$set": studentdetails})
+    if image:
+        image_url = None
+    
+        intial='http://localhost:8000/student'
+        if image is not None:
+            file_path = os.path.join(os.getcwd(), 'profile_pics', image.filename)
+            with open(file_path, "wb") as buffer:
+                shutil.copyfileobj(image.file, buffer)
+            image_url = f"{intial}/profile_pics/{image.filename}"
+            
+        details['image']=image_url
+    col_student.update_one({"_id": ObjectId(student_id)}, {"$set": details})
     return {"Succesfully updated the record"}
 
 async def deletebyid(student_id:str):

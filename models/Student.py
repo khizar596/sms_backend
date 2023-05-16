@@ -21,7 +21,7 @@ class Student(BaseModel):
     session: str
     class_id : str #List = [ ]
     # parentid:str #List = [ ]
-    blocked: Optional[bool]  = Field(default=False)
+    blocked: Optional[bool]  = Field()
     role : List = []
     # description: Union[str, None] = None #Optional thing can be declared by none
 
