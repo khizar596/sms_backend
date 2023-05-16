@@ -63,4 +63,3 @@ async def delete_id(id: str):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No record with id: {id} found')
     return { "status" : status.HTTP_200_OK}
-
