@@ -17,4 +17,4 @@ jobs:
         server: smsbackend.aasecurityforce.com
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: /repositories/sms_backend
+        server-dir: /repositories/sms_backend/
