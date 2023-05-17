@@ -1,0 +1,11 @@
+---
+deploy:
+  tasks:
+    - export DEPLOY_DIR=$HOME/repositories/sms_backend/.github/workflows
+    - git clone https://github.com/khizar596/sms_backend.git
+    - mv sms_backend $DEPLOY_DIR
+    - cd $DEPLOY_DIR
+    - python -m venv venv
+    - source venv/bin/activate
+    - pip install -r requirements.txt
+    - uvicorn main:app --host 0.0.0.0 --port 8000
