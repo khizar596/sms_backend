@@ -15,6 +15,6 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: smsbackend.aasecurityforce.com
-        username: aasetwhl
-        password: M%cmSmgfqffvf,w1Le
+        username: ${{ secrets.ftp_username }}
+        password: ${{ secrets.ftp_password }}
         server-dir: /repositories/sms_backend/
