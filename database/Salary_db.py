@@ -19,12 +19,12 @@ async def viewSalary():
         except:
             raise HTTPException(204,"student admin not found")       
         try:
-            Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+            Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 1,'name':1})
 
         except:
             raise HTTPException(204,"Admin not found")
         try:
-            Accountant2id_relation = cole.find_one({"_id": ObjectId(document['Accountant2id']),'role.0.name': 'Accountant'}, {'_id': 0,'first_name':1})
+            Accountant2id_relation = cole.find_one({"_id": ObjectId(document['Accountant2id']),'role.0.name': 'Accountant'}, {'_id': 1,'first_name':1})
 
         except:
             raise HTTPException(204,"Accountant not found")
@@ -33,6 +33,8 @@ async def viewSalary():
 
             document['Admin2id'] = Admin2id_relation
             Employee2id_relation['_id']= str(Employee2id_relation['_id'])    
+            Admin2id_relation['_id']= str(Admin2id_relation['_id'])    
+            Accountant2id_relation['_id']= str(Accountant2id_relation['_id'])    
 
             document['Employee2id'] = Employee2id_relation 
 
@@ -51,22 +53,25 @@ async def searchSalary(Salary_id : str)->dict:
 
         raise HTTPException(status_code=404, detail="document not found")
     try:
-        Employee2id_relation=  cole.find_one({"_id": ObjectId( document['Employee2id'])},{'_id': 0,'first_name':1})
-        print(Employee2id_relation)
+        Employee2id_relation=  cole.find_one({"_id": ObjectId( document['Employee2id'])},{'_id': 1,'first_name':1})
 
     except:
         raise HTTPException(204,"student admin not found")       
     try:
-        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 0,'name':1})
+        Admin2id_relation = col_Admin.find_one({"_id": ObjectId(document['Admin2id']), 'role.0.name': 'Admin'}, {'_id': 1,'name':1})
 
     except:
         raise HTTPException(204,"Admin not found")
     try:
-        Accountant2id_relation = cole.find_one({"_id": ObjectId(document['Accountant2id']),'role.0.name': 'Accountant'}, {'_id': 0,'first_name':1})
+        Accountant2id_relation = cole.find_one({"_id": ObjectId(document['Accountant2id']),'role.0.name': 'Accountant'}, {'_id': 1,'first_name':1})
 
     except:
         raise HTTPException(204,"Accountant not found")
     if Employee2id_relation and Admin2id_relation and Accountant2id_relation:
+        Employee2id_relation['_id']= str(Employee2id_relation['_id'])    
+        Admin2id_relation['_id']= str(Admin2id_relation['_id'])    
+        Accountant2id_relation['_id']= str(Accountant2id_relation['_id'])    
+
         document['Admin2id'] = Admin2id_relation
         document['Employee2id'] = Employee2id_relation 
         document['Accountant2id'] = Accountant2id_relation 
